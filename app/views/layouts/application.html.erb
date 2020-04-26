@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title><%= full_title(yield(:title)) %></title>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag    'application', media: 'all',
+                               'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application',
+                               'data-turbolinks-track': 'reload' %>
+    <!-- HTML shimがこの1行で収まる -->
+    <%= render 'layouts/shim' %>
+  </head>
+  <body>
+    <!-- headerの内容がこの1行で収まる -->
+    <%= render 'layouts/header' %>
+    <div class="container">
+      <%= yield %>
+    </div>
+  </body>
+</html>
+<%
+=begin
+<html>
+  <head>
      <title><%= full_title(yield(:title))%> | AttendanceApp</title>
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag    'application', media: 'all',
@@ -11,9 +32,15 @@
     <%= csrf_meta_tags %>
 <%# <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%# <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js">
+      </script>
+    <![endif]-->
+
   </head>
 
   <body>
     <%= yield %>
   </body>
 </html>
+=end %>
