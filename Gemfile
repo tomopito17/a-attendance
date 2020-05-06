@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails',        '~> 5.1.6'
+gem 'rails-i18n' #8おまけ日本語化。
 gem 'bcrypt'# 4.5
 gem 'faker' # 8.4追加してください。
 gem 'bootstrap-sass'#3.2
