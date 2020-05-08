@@ -1,9 +1,7 @@
 Rails.application.routes.draw do
-  #6.1-get 'sessions/new'
-  #get 'users/new'
-  
+  #6.1-get 'sessions/new'   #get 'users/new'
   root 'static_pages#top'
-  get '/signup', to: 'users#new'   
+  get '/signup', to: 'users#new'
 
 
   # ログイン機能
@@ -12,7 +10,10 @@ Rails.application.routes.draw do
   delete '/logout', to: 'sessions#destroy'
 
   #get 'static_pages/top'
-  resources :users
-
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  resources :users do #add9.3do
+    member do
+      get 'edit_basic_info'
+      patch 'update_basic_info'
+    end
+  end  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
