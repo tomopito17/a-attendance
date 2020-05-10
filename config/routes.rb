@@ -15,5 +15,6 @@ Rails.application.routes.draw do
       get 'edit_basic_info'
       patch 'update_basic_info'
     end
+    resources :attendances, only: :update # この行を追加します。
   end  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
