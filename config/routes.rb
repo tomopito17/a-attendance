@@ -14,6 +14,8 @@ Rails.application.routes.draw do
     member do
       get 'edit_basic_info'
       patch 'update_basic_info'
+      get 'attendances/edit_one_month'  #11.1.1
+      patch 'attendances/update_one_month'  #11.1.5add
     end
     resources :attendances, only: :update # この行を追加します。
   end  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

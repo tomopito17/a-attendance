@@ -2,14 +2,14 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-/* ユーザー情報テーブル */
+/* ユーザー情報テーブル 11Omake*/ 
 
 .user-table {
   vertical-align: middle;
   text-align: center;
 }
 
-/* ユーザー勤怠情報テーブル */
+/* ユーザー勤怠情報テーブル 11Omake*/
 
 #table-attendances {
   th {
@@ -22,7 +22,7 @@
   }
 }
 
-/* 入力フォーム */
+/* 入力フォーム 11Omake*/
 
 
 .label-signup {
@@ -41,13 +41,16 @@
   margin-top: 10px;
 }
 
-/* ユーザー一覧ページ */
+/* ユーザー一覧ページ 11Omake*/
 
 #table-users {
   td {
     vertical-align: middle;
+    text-align: center;  //#add 11Omake
   }  
 }
+
+
 
 /* 基本情報編集モーダルウインドウ */
 

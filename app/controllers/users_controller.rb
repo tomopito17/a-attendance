@@ -79,35 +79,35 @@ class UsersController < ApplicationController
     def basic_info_params
       params.require(:user).permit(:department, :basic_time, :work_time)
     end
+    
+end
     # beforeフィルター
     # paramsハッシュからユーザーを取得します。
-    def set_user
-      @user = User.find(params[:id])
-    end
+    # def set_user 11.1.3 Move
+    #   @user = User.find(params[:id])
+    # end
 
-    # ログイン済みのユーザーか確認します。
-    def logged_in_user
-      unless logged_in?
-        store_location
-        flash[:danger] = "ログインしてください。"
-        redirect_to login_url
-      end
-    end
+    # # ログイン済みのユーザーか確認します。
+    # def logged_in_user
+    #   unless logged_in?
+    #     store_location
+    #     flash[:danger] = "ログインしてください。"
+    #     redirect_to login_url
+    #   end
+    # end
  
-    # アクセスしたユーザーが現在ログインしているユーザーか確認します。
-    def correct_user
-      redirect_to(root_url) unless current_user?(@user)
-      # @user = User.find(params[:id])
-      # redirect_to(root_url) unless @user == current_user
-    end
+    # # アクセスしたユーザーが現在ログインしているユーザーか確認します。
+    # def correct_user
+    #   redirect_to(root_url) unless current_user?(@user)
+    #   # @user = User.find(params[:id])
+    #   # redirect_to(root_url) unless @user == current_user
+    # end
  
-    # システム管理権限所有かどうか判定します。
-    def admin_user
-      redirect_to root_url unless current_user.admin?
-    end
-end
+    # # システム管理権限所有かどうか判定します。
+    # def admin_user
+    #   redirect_to root_url unless current_user.admin?
+    # end
 
 =begin
   validates :name, presence: true#validates(:name, presence: true)
 =end
-
