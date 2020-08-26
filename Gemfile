@@ -14,6 +14,7 @@ gem 'coffee-rails', '~> 4.2'
 gem 'jquery-rails'
 gem 'turbolinks',   '~> 5'
 gem 'jbuilder',     '~> 2.5'
+gem 'rounding'#BNo10追加
 
 group :development, :test do
   gem 'sqlite3', '1.3.13' #add_1.3.13番外編2

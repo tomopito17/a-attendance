@@ -27,15 +27,21 @@
 <div>
   <table class="table table-bordered table-condensed table-hover" id="table-attendances">
     <thead>
-      <tr>
-        <th>日付</th>
-        <th>曜日</th>
-        <th>勤怠登録</th>
-        <th>出勤時間</th>
-        <th>退勤時間</th>
-        <th>在社時間</th>
-        <th>備考</th>
-      </tr>
+      <tr><%#colspan="1" 縦結合%>
+        <th rowspan = "2">日付</th>
+        <th rowspan = "2">曜日</th>
+        <th rowspan = "2">勤怠登録</th>
+        <th colspan = "2">出社</th>
+        <th colspan = "2">退社</th>
+        <th rowspan = "2">在社時間</th>
+        <th rowspan = "2">備考</th>
+        </tr>
+        <tr>
+        <th>時</th>
+        <th>分</th>
+        <th>時</th>
+        <th>分</th>
+      </tr>  
     </thead>
 
     <tbody>
@@ -52,11 +58,17 @@
               <%= link_to "退勤登録", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
             <% end %>
           </td> <%#<td><%= l(day, format: :short) >%</td>%> <%#<td><%= $days_of_the_week[day.wday] >%</td>%>
-          <td><%= l(day.started_at, format: :time) if day.started_at.present? %></td> <%#10.5.3add%>
-          <td><%= l(day.finished_at, format: :time) if day.finished_at.present? %></td> <%#10.6.2add%>
+          <%#<td><%= l(format_hour(day.started_at), format: :time) if day.started_at.present? ></td>
+          <td><%= l(format_min(day.started_at), format: :time) if day.started_at.present? ></td>%>
+          <td><%= format_hour(day.started_at) if day.started_at.present? %></td>
+          <td><%= format_min(day.started_at) if day.started_at.present? %></td>
+          <td><%= format_hour(day.finished_at) if day.finished_at.present? %></td>
+          <td><%= format_min(day.finished_at) if day.finished_at.present? %></td>
+          <%#<td><%= l(day.started_at, format: :time) if day.started_at.present? ></td> %>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
-              <%= str_times = working_times(day.started_at, day.finished_at) %>
+              <%= working_times(day.started_at.floor_to(15.minute), day.finished_at.floor_to(15.minute) ) %>
+              <% str_times = working_times(day.started_at.floor_to(15.minute), day.finished_at.floor_to(15.minute)) %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
             <%#10.9.2 <% if day.started_at.present? && day.finished_at.present? >%
