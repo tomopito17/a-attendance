@@ -34,4 +34,5 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
-Br1
+Br1git add -A
+HTTPS->SSH
