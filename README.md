@@ -35,4 +35,4 @@ Things you may want to cover:
 
 * ...
 Br1git add -A
-HTTPS->SSH
+HTTPS->SSH 1
