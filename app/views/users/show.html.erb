@@ -46,10 +46,20 @@
 
     <tbody>
       <% @attendances.each do |day| %> <%#10.4 (@first_day..@last_day).each do%>
+        <% 
+          css_class = 
+          case $days_of_the_week[day.worked_on.wday]
+          when '土' then
+            'text-primary'
+          when '日' then
+            'text-danger'
+          end
+        %>
         <tr>
           <td><%= l(day.worked_on, format: :short) %></td>
-          <td><%= $days_of_the_week[day.worked_on.wday] %></td>
-          <td>
+          <td class="<%= css_class %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
+<%#          <td class= "<%= css_class % >"></td><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] % ></td>%>
+            <td>
             <% if btn_text = attendance_state(day) %>
               <%= link_to "#{btn_text}登録", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
               <%#<% if (Date.current == day.worked_on) && day.started_at.nil? >%
