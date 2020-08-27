@@ -8,7 +8,13 @@ class UsersController < ApplicationController
  #logged_in_user 8.4add_index,8.5.2add_destroy,9.3Del show add basicinfo
 
   def index
-    @users = User.paginate(page: params[:page]) #8.4.4 Del_@users = User.all#8.4.1
+    if params[:search].present?
+      @users = User.paginate(page: params[:page]).search(params[:search])
+    else
+      @users = User.paginate(page: params[:page])
+    end
+   #@users = User.paginate(page: params[:page]) #8.4.4 Del_@users = User.all#8.4.1
+   #@users = User.where(activated: true).paginate(page: params[:page]).search(params[:search])
   end
   
 

@@ -15,7 +15,7 @@ class User < ApplicationRecord
   validates :basic_time, presence: true #9.2
   validates :work_time, presence: true #9.2
   has_secure_password #4.5
-  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true#8.12allow
+  validates :password, presence: true, length: { minimum: 2 }, allow_nil: true#8.12allow
 
   # 渡された文字列のハッシュ値を返します。
   def User.digest(string)
@@ -50,7 +50,17 @@ class User < ApplicationRecord
   def forget
     update_attribute(:remember_digest, nil)
   end
+
+  def self.search(search) #ここでのself.はUser.を意味する No9ユーザ検索
+    if search
+      where(['name LIKE ?', "%#{search}%"]) #検索とnameの部分一致を表示。User.は省略
+    else
+      all #全て表示。User.は省略
+    end
+  end
+  
 end
+  
 =begin
   validates :name,  presence: true, length: { maximum: 50 }#validates(:name, presence: true)
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
