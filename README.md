@@ -38,3 +38,6 @@ Br1git add -A
 HTTPS->SSH 2
 
 echo "cd PATH_OF_YOUR_DIR" >> ~/.bash_profile
+
+
+

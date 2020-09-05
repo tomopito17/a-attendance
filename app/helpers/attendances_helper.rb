@@ -1,5 +1,4 @@
-module AttendancesHelper
-#10.6.1add
+module AttendancesHelper#10.6.1add
   def attendance_state(attendance)
     # 受け取ったAttendanceオブジェクトが当日と一致するか評価します。
     if Date.current == attendance.worked_on
@@ -23,4 +22,21 @@ module AttendancesHelper
     format("%02d", ((time.min / 15) * 15))
   end
   
+  # 不正な値があるか確認するTestNo9
+  def attendances_invalid?
+    attendances = true
+    attendances_params.each do |id, item|
+      if item[:started_at].blank? && item[:finished_at].blank?
+        next
+      elsif item[:started_at].blank? || item[:finished_at].blank?
+        attendances = false
+        break
+      elsif item[:started_at] > item[:finished_at]
+        attendances = false
+        break
+      end
+    end
+    return attendances
+  end
+
 end
