@@ -10,7 +10,7 @@
     </tr>
 
     <tr>
-      <td>所属：<%= @user.department.present? ? @user.departmecd ..nt : "未所属" %></td>
+      <td>所属：<%= @user.department.present? ? @user.department : "未所属" %></td>
       <td>名前：<%= @user.name %></td>
       <td>出勤日数：<%= @worked_sum %>日</td> <%#update10.7%>
       <td>月末日：<%= l(@last_day, format: :short) %></td>  <%#10.3update%>
