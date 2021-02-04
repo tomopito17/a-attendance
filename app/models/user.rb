@@ -58,9 +58,32 @@ class User < ApplicationRecord
       all #全て表示。User.は省略
     end
   end
-  
+
+# def self.import_csv(file)
+#   CSV.foreach(file.path, 'r:cp932:utf8', headers:true) do |row|
+#     user = new
+#     user.attributes = row.to_hash.slice(*csv_attributes)
+#     user.save!
+#   end
+# end
+  #CSVインポート A01
+  def self.csv_attributes
+    ["name", "email", "role", "employee_number", "card_id", "base_attendance_time", "start_attendance_time","end_attendance_time", "admin","password"]
+  end
+
+  def self.import_csv(file)
+    CSV.foreach(file.path,'r:cp932:utf8',headers:true) do |row|
+      #ID 見つかればレコード入力、なければ新規作成
+      user = find_by(id: row["id"]) || new
+      #CSVファイル取得、値入力
+      user.csv_attributes = row.to_hash.slice(*updatable_attributes)
+      user.save
+    end
+  end
+
 end
-  
+
+
 =begin
   validates :name,  presence: true, length: { maximum: 50 }#validates(:name, presence: true)
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i

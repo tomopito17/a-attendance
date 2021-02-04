@@ -1,0 +1,2 @@
+name,email,role,employee_number,card_id,base_attendance_time,start_attendance_time,end_attendance_time,admin,password,password_confirmation 
+csvuser,happycreator.tanaka+15@gmail.com,1,23,7778,2020-03-02 05:00:00 +0900,2020-03-02 03:00:00 +0900,2020-03-02 04:00:00 +0900,true,password,password

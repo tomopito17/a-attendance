@@ -5,8 +5,25 @@ class UsersController < ApplicationController
   before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info]
   before_action :set_one_month, only: :show
   before_action :admin_or_correct, only: %i(show)
-
  #logged_in_user 8.4add_index,8.5.2add_destroy,9.3Del show add basicinfo
+
+# CSVimport
+  # def import csv
+  #   if params[:csv_file].blank?
+  #     flash[:dnger] = "ファイルが未選択です。ファイルを選択してください。"
+  #   elseif
+  #    File.extname(params[:csv_csv_file])
+  #    flash[:danger]= "CSVファイルを選択してください。"
+  #    #params[:csv_file].blank?
+  #    #redirect_to action: 'index', error: '読み込むCSVを選択してください'
+  #   else
+  #     count = User.import(params[*csv_file])
+  #     flash[:success] = "#{ count.to_s}件のユーザー情報を追加しました。"
+  #   end
+  #    redirect_to users_path
+  # end
+
+
 
   def index
     if params[:search].present?
@@ -75,7 +92,27 @@ class UsersController < ApplicationController
     end
     redirect_to users_url
   end
-	
+
+  
+  def import_csv  #importCSV
+    if params[:file].blank!
+      flash[:waring]= "CSVファイルが選択されていません。"
+      redirect_to users_url
+    else
+      User.import_csv(params[:file])
+      redirect_to users_url, notice: "ユーザーを追加しました"
+    end
+  end
+
+    # User.rbに記述すべきか確認
+  #   def users_csv(file)
+  #    CSV.foreach(file.path, headers: true) do |row|
+  #     @User = User.new
+  #     @User.attributes = row.to_hash.slice(*csv_attributes)
+  #     @user.save!
+  #   end
+  # end
+
 
   private
 

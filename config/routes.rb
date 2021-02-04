@@ -9,8 +9,11 @@ Rails.application.routes.draw do
   post   '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
 
-  #get 'static_pages/top'
+#importCSV
+  post '/import_csv', to: 'users#import_csv'  #A01
+ 
   resources :users do #add9.3do
+    post 'import_csv'  #A01
     member do
       get 'edit_basic_info'
       patch 'update_basic_info'
@@ -19,4 +22,5 @@ Rails.application.routes.draw do
     end
     resources :attendances, only: :update # この行を追加します。
   end  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
 end
