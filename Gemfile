@@ -4,8 +4,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.7.1'
 
-#gem 'rails',        '~> 5.1.6'
-gem 'rails', '~> 6.0.3', '>= 6.0.3.2'
+gem 'rails',        '~> 5.1.6'
+#gem 'rails', '~> 6.0.3', '>= 6.0.3.2'
+
 gem 'rails-i18n'  #8おまけ日本語化。
 #gem 'bcrypt'  # 4.5
 gem 'bcrypt', '~> 3.1.7'

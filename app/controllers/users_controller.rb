@@ -8,6 +8,7 @@ class UsersController < ApplicationController
  #logged_in_user 8.4add_index,8.5.2add_destroy,9.3Del show add basicinfo
 
 # CSVimport
+ require 'active_support/all'
   # def import csv
   #   if params[:csv_file].blank?
   #     flash[:dnger] = "ファイルが未選択です。ファイルを選択してください。"
@@ -93,9 +94,8 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
-  
   def import_csv  #importCSV
-    if params[:file].blank!
+    if params[:file].blank?
       flash[:waring]= "CSVファイルが選択されていません。"
       redirect_to users_url
     else

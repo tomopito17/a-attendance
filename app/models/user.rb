@@ -17,6 +17,8 @@ class User < ApplicationRecord
   has_secure_password #4.5
   validates :password, presence: true, length: { minimum: 2 }, allow_nil: true#8.12allow
 
+  require 'csv' #Add A02
+
   # 渡された文字列のハッシュ値を返します。
   def User.digest(string)
     cost = 
@@ -68,16 +70,18 @@ class User < ApplicationRecord
 # end
   #CSVインポート A01
   def self.csv_attributes
-    ["name", "email", "role", "employee_number", "card_id", "base_attendance_time", "start_attendance_time","end_attendance_time", "admin","password"]
+    ["name", "email", "affiliation", "employee_number", "uid", "basic_work_time", "designated_work_start_time","designated_work_end_time", "superior","admin","password"]
   end
 
   def self.import_csv(file)
     CSV.foreach(file.path,'r:cp932:utf8',headers:true) do |row|
       #ID 見つかればレコード入力、なければ新規作成
-      user = find_by(id: row["id"]) || new
+      #user = find_by(id: row["id"]) || new
+      user = new
       #CSVファイル取得、値入力
-      user.csv_attributes = row.to_hash.slice(*updatable_attributes)
-      user.save
+      user.attributes = row.to_hash.slice(*csv_attributes)
+      #user.csv_attributes = row.to_hash.slice(*updatable_attributes)
+      user.save!
     end
   end
 
