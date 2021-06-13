@@ -13,7 +13,7 @@ CSV.generate do |csv|
       user.base_attendance_time,
       user.start_attendance_time,
       user.end_attendance_time,
-      user.admin,
+      user.admin
     ]
     csv << column_values
   end

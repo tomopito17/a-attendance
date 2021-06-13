@@ -20,7 +20,11 @@ Rails.application.routes.draw do
       get 'attendances/edit_one_month'  #11.1.1
       patch 'attendances/update_one_month'  #11.1.5add
     end
-    resources :attendances, only: :update # この行を追加します。
+
+    resources :attendances, only: :update # この行を追加します。  
   end  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  #拠点情報
+  resources :working_places#追加0509
+
 
 end

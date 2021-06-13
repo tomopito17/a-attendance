@@ -1,6 +1,9 @@
 class User < ApplicationRecord
   has_many :attendances, dependent: :destroy
   # 「remember_token」という仮想の属性を作成します。
+  #has_many :user_working_places, dependent: :destroy  #A02
+  #has_many :working_places, through: :user_working_places #A02
+  
   attr_accessor :remember_token
   before_save { self.email = email.downcase }
   
@@ -61,30 +64,28 @@ class User < ApplicationRecord
     end
   end
 
-# def self.import_csv(file)
-#   CSV.foreach(file.path, 'r:cp932:utf8', headers:true) do |row|
-#     user = new
-#     user.attributes = row.to_hash.slice(*csv_attributes)
-#     user.save!
-#   end
-# end
+
   #CSVインポート A01
   def self.csv_attributes
     ["name", "email", "affiliation", "employee_number", "uid", "basic_work_time", "designated_work_start_time","designated_work_end_time", "superior","admin","password"]
   end
 
   def self.import_csv(file)
+   #CSV.foreach(file.path, headers:true) do |row|
     CSV.foreach(file.path,'r:cp932:utf8',headers:true) do |row|
       #ID 見つかればレコード入力、なければ新規作成
-      #user = find_by(id: row["id"]) || new
-      user = new
+      user = find_by(id: row["id"]) || new
+    ##user = new
       #CSVファイル取得、値入力
-      user.attributes = row.to_hash.slice(*csv_attributes)
-      #user.csv_attributes = row.to_hash.slice(*updatable_attributes)
+     #user.attributes = row.to_hash.slice(*csv_attributes)
+      user.attributes = row.to_hash.slice(*updatable_attributes)
       user.save!
     end
   end
 
+  def self.updatable_attributes
+    ["name", "email", "affiliation", "employee_number", "uid", "basic_work_time", "designated_work_start_time","designated_work_end_time", "superior","admin","password"]
+  end
 end
 
 

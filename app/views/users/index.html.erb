@@ -33,8 +33,14 @@
 
         <% @users.each do |user| %>
         <tr>
+<%
+=begin%>
+             
             <td><%= link_to user.name, user %></td>
-            <td> <%##9.4%>
+             
+<%
+=end%>
+            <%##9.4%>
             <td>
                 <% if current_user.admin? %>
                 <%= link_to user.name, user %>

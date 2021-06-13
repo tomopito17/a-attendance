@@ -1,0 +1,22 @@
+<h1>拠点一覧</h1>
+<div>
+    <table class="table table-bordered table-striped table-condensed">
+        <tr>
+            <td class="table-body">　</td>
+            <td class="table-body">　</td>
+            <td class="table-body">拠点番号</td>
+            <td class="table-body">拠点名</td>
+            <td class="table-body">勤怠種類</td>
+        </tr>
+        <% @working_places.each do |working_place| %>
+        <tr>
+            <td class="table-body"><%= link_to "編集", edit_working_place_path(working_place), class: "btn btn-primary btn-sm" %></td>
+            <td class="table-body"><%= link_to "削除", working_place, method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-primary btn-sm" %></td>
+            <td class="table-body"><%= link_to(working_place.working_place_number) %></td>
+            <td class="table-body"><%= link_to(working_place.working_place_name) %></td>
+            <td class="table-body"><%= link_to(working_place.working_place_type) %></td>
+        </tr>
+        <% end %>
+    </table>
+    <%= link_to "拠点情報の追加", new_working_place_path, class: "btn btn-primary btn-sm" %>
+</div>

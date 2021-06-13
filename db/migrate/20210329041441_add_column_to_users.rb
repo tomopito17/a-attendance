@@ -7,7 +7,7 @@ class AddColumnToUsers < ActiveRecord::Migration[5.1]
     add_column :users, :designated_work_start_time, :datetime
     add_column :users, :designated_work_end_time, :datetime
     add_column :users, :superior, :boolean
-    add_column :users, :admin, :boolean
+   # add_column :users, :admin, :boolean
     add_column :users, :password, :string
   end
 end

@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  working_place_number: 1
+  working_place_name: MyString
+  working_place_type: MyString
+
+two:
+  working_place_number: 1
+  working_place_name: MyString
+  working_place_type: MyString
