@@ -19,12 +19,15 @@ Rails.application.routes.draw do
       patch 'update_basic_info'
       get 'attendances/edit_one_month'  #11.1.1
       patch 'attendances/update_one_month'  #11.1.5add
+      get 'attendances/overwork_form'#A03残業申請
     end
 
-    resources :attendances, only: :update # この行を追加します。  
-  end  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  #拠点情報
-  resources :working_places#追加0509
+    resources :attendances, only: :update # この行を追加します。
+    #A03  
+  end  
 
+  #拠点情報
+  resources :working_places#A02追加0509
+  resources :attendances#A03残業申請
 
 end

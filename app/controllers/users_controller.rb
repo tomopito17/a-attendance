@@ -104,6 +104,8 @@ class UsersController < ApplicationController
     end
   end
 
+
+
     # User.rbに記述すべきか確認
   #   def users_csv(file)
   #    CSV.foreach(file.path, headers: true) do |row|

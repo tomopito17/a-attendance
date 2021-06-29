@@ -1,47 +1,92 @@
 <% provide(:title, @user.name) %>
 <%= form_with(model: @user, url: attendances_update_one_month_user_path(date: @first_day), local: true, method: :patch) do |f| %> <%#11.1.5%>
-  <div>
+<div>
     <h1>勤怠編集画面</h1>
     <table class="table table-bordered table-condensed table-hover" id="table-attendances">
-      <thead>
-        <tr>
-          <th>日付</th>
-          <th>曜日</th>
-          <th>出勤時間</th>
-          <th>退勤時間</th>
-          <th>在社時間</th>
-          <th>備考</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @attendances.each do |day| %>
-          <%= f.fields_for "attendances[]", day do |attendance| %>
+        <thead>
             <tr>
-              <td><%= l(day.worked_on, format: :short) %></td>
-              <td><%= $days_of_the_week[day.worked_on.wday] %></td>
-              <%# if !current_user.admin? && (Date.current < day.worked_on) %> <%#No9 22 test%>
-              <%  if Date.current < day.worked_on %> <%#add11.3.3%>
+                <th>日付</th>
+                <th>曜日</th>
+                <th>出勤時間</th>
+                <th>退勤時間</th>
+                <th>在社時間</th>
+                <th>備考</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @attendances.each do |day| %>
+            <%= f.fields_for "attendances[]", day do |attendance| %>
+            <tr>
+                <td><%= l(day.worked_on, format: :short) %></td>
+                <td><%= $days_of_the_week[day.worked_on.wday] %></td>
+                <%# if !current_user.admin? && (Date.current < day.worked_on) %> <%#No9 22 test%>
+                <%  if Date.current < day.worked_on %> <%#add11.3.3%>
                 <td><%= attendance.time_field :started_at, readonly: true, class: "form-control" %></td> <%#readonly true 11.3.3%>
                 <td><%= attendance.time_field :finished_at, readonly: true, class: "form-control" %></td>
-              <% else %> <%#11.3.3add#%>
+                <% else %> <%#11.3.3add#%>
                 <td><%= attendance.time_field :started_at, class: "form-control" %></td>
                 <td><%= attendance.time_field :finished_at, class: "form-control" %></td>
-              <% end %>
-              <td>  <%#11.1.6%>
-                <% if day.started_at.present? && day.finished_at.present? %>
-                  <%= working_times(day.started_at, day.finished_at) %>
                 <% end %>
-              </td>
-              <td><%= attendance.text_field :note, class: "form-control" %></td>
+                <td> <%#11.1.6%>
+                    <% if day.started_at.present? && day.finished_at.present? %>
+                    <%= working_times(day.started_at, day.finished_at) %>
+                    <% end %>
+                </td>
+                <td><%= attendance.text_field :note, class: "form-control" %></td>
             </tr>
-          <% end %>
-        <% end %>
-      </tbody>
+            <% end %>
+            <% end %>
+        </tbody>
     </table>
-  </div>
+</div>
 
-  <div class="center">  <%#11.1.4Cancelボタン%>
-     <%= f.submit "まとめて更新", class: "btn btn-lg btn-primary" %> <%#11.1.5追加関数%>
+<div class="center"> <%#11.1.4Cancelボタン%>
+    <%= f.submit "まとめて更新", class: "btn btn-lg btn-primary" %> <%#11.1.5追加関数%>
     <%= link_to "キャンセル", user_path(date: @first_day), class: "btn btn-lg btn-default" %>
-  </div>
+</div>
+
+
+<!-- 残業申請ボタンを押すとモーダルへ飛ぶ-->
+<%
+=begin%>
+<td class="table-body"><%= link_to "残業申請", edit_attendance_path(attendance), remote: true, :style=>"color:white;", class: "btn btn-sm btn-primary" %>
+    <div id="overwork-form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+</td>
+
+<!--日付-->
+<td class="table-body"><%= attendance.attendance_date.month %>/<%= attendance.attendance_date.day %></td>
+<!--曜日-->
+<td class="table-body"><%= @youbi[attendance.attendance_date.wday] %></td>
+<!-- 出社時間の表示  -->
+<td class="table-body">
+    <%= attendance.arriving_at.hour if !attendance.arriving_at.nil? %>
+</td>
+<td class="table-body">
+    <%= attendance.arriving_at.min if !attendance.arriving_at.nil? %>
+</td>
+<td class="table-body">
+    <!-- 自身の勤怠で出社時間と退社時間が空なら表示  -->
+    <% if current_user == @user && attendance.arriving_at.nil? && attendance.leaving_at.nil? && attendance.attendance_date == Date.today %>
+    <%= f.hidden_field :update_type, :value => "arriving_at"%>
+    <%= f.submit "出社", class: "btn btn-primary btn-block" %>
+    <% end %>
+</td>
+
+<!-- 退社時間の表示  -->
+<td class="table-body">
+    <%= attendance.leaving_at.hour if !attendance.leaving_at.nil? %>
+</td>
+<td class="table-body">
+    <%= attendance.leaving_at.min if !attendance.leaving_at.nil? %>
+</td>
+<td class="table-body">
+    <!-- 出社時間入力済みかつ退社時間が空なら表示  -->
+    <% if current_user == @user && !attendance.arriving_at.nil? && attendance.leaving_at.nil? && attendance.attendance_date == Date.today %>
+    <%= f.hidden_field :update_type, :value => "leaving_at"%>
+    <%= f.submit "退社", class: "btn btn-primary btn-block" %>
+    <% end %>
+</td>
+<%
+=end%>
+
 <% end %>
