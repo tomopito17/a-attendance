@@ -1,4 +1,20 @@
 <% provide(:title, @user.name) %>
+<!--上長で（自分かどうか）&未承認だったら申請のお知らせの表示・未承認のものがあれば文字は赤色-->
+<% if current_user.superior %>
+<!-- 所属長承認リンクを押すとモーダルへ飛ぶ-->
+<%= link_to "【所属長承認のお知らせ】", monthly_confirmation_form_path, remote: true %>
+<div id="monthly-confirmation-form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!-- 所属長承認の件数をカウントする-->
+<%= @monthly_confirmation_count %>
+<% end %>
+
+<!--attendance_edit_pathに、userのidと今月の値を渡す-->
+<div class="actions">
+    <%= link_to "　　　勤怠を編集　　　", attendance_edit_url(@attendance, params: { id: @user.id, first_day: @first_day }), :style=>"color:white;", class: "btn btn-primary btn-sm" %>
+    <%= link_to "　　　CSV出力　　　", attendances_path(format: :csv), class: "btn btn-primary btn-sm" %>
+    <%= link_to "勤怠修正ログ（承認済）", attendance_logs_path(@attendance, params: { id: @user.id, first_day: @first_day }), :style=>"color:white;", class: "btn btn-primary btn-sm" %>
+</div>
+
 <%# <h1><%= @user.name >%, <%= @user.email >%</h1>--> %>
 <div><%#10.2 で月日分を追加%>
     <table class="table table-bordered table-condensed user-table">
@@ -61,7 +77,8 @@
 
                 <!-- 残業申請ボタン押下　モーダルへ飛ぶ-->
                 <td class="table-body">
-                    <%= link_to "残業申請", attendances_overwork_form_user_path(data:day.worked_on), remote: true, :style=>"color:white;", class: "btn btn-sm btn-primary" %>
+                    <%= link_to "残業申請", overwork_form_user_attendance_path(@user, day), remote: true, :style=>"color:white;", class: "btn btn-sm btn-primary" %>
+
                     <%
 =begin%>
                     attendances_overwork_form_user_path(data:day.worked_on)
@@ -123,7 +140,6 @@
         </tfoot>
     </table>
 </div>
-
 <!-- モーダル呼び出し-->
 <div id="overwork-form-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
 </div>

@@ -1,9 +1,9 @@
 class AttendancesController < ApplicationController
   include AttendancesHelper
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :overwork_form]#11.3.4 :update_one_month add A03 overworkform
+  before_action :set_user, only: [:edit_one_month, :update_one_month]#11.3.4 :update_one_month add A03 overworkform
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month] #11.3.4
-  before_action :set_one_month, only: [:edit_one_month ,:overwork_form]
+  before_action :set_one_month, only: [:edit_one_month ]
 
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
 
@@ -42,10 +42,21 @@ class AttendancesController < ApplicationController
     # end
     
   end
-  
+  def index
+    @user = User.find(params[:user_id])
+    @seniors = User.where(superior: true).where.not(id: @user.id)
+    #上長IDを自分以外にする
+  end
+
   def overwork_form
-    @attendance = Attendance.find(params[:id])
-    @seniors = User.where(superior: true).map(&:name)
+    @user = User.find(params[:user_id])
+    @attendance = @user.attendances.find(params[:id])
+    #@seniors = User.where(superior: true)
+    @seniors = User.where(superior: true).where.not(id: @user.id)
+  end
+
+  def update_overwork
+
   end
     
     #A03残業申請　値入力確認

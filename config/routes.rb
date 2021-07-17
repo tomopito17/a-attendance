@@ -18,16 +18,21 @@ Rails.application.routes.draw do
       get 'edit_basic_info'
       patch 'update_basic_info'
       get 'attendances/edit_one_month'  #11.1.1
-      patch 'attendances/update_one_month'  #11.1.5add
-      get 'attendances/overwork_form'#A03残業申請
+      patch 'attendances/update_one_month'  #11.1.5add      
     end
 
-    resources :attendances, only: :update # この行を追加します。
-    #A03  
+    resources :attendances, only: :update do # この行を追加します。#A03
+      member do
+        get 'overwork_form' #A03残業申請
+        patch 'update_overwork' #A03残業申請更新
+        
+      end
+    end
+
   end  
 
   #拠点情報
   resources :working_places#A02追加0509
-  resources :attendances#A03残業申請
+ 
 
 end
