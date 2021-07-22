@@ -63,13 +63,12 @@ class AttendancesController < ApplicationController
 
   def update_overwork #A04残業更新
     #debugger
-    @user = User.find(params[:user_id])
+    @user = User.find(para  ms[:user_id])
     @attendance = @user.attendances.find(params[:id])
       #チェックボックスはifで分岐だけでTBlのDBは入れてない
-    if params[:overday_check]
+    if params[:overday_check] #A05add
       @attendance.overtime = @attendance.overtime + 1.day
     end 
-
     params[:attendance][:overwork_status] = "申請中"
     if @attendance.update_attributes(overwork_params)
       flash[:success] = "残業を申請しました。" # 更新成功時の処理
