@@ -8,5 +8,8 @@ class AddOvertimeToAttendances < ActiveRecord::Migration[5.1]
     #add_column :attendances, :overwork_approver_id, :integer
     add_column :attendances, :overday_check, :boolean
     add_column :attendances, :overwork_sperior, :integer
+    #A04 ADD manual
+    add_column :attendances, :monthly_confirmation_approver_id, :integer
+    add_column :attendances, :monthly_confirmation_status, :integer
   end
 end

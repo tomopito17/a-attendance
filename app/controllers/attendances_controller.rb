@@ -42,44 +42,43 @@ class AttendancesController < ApplicationController
     # end
     
   end
-  def index
-    @user = User.find(params[:user_id])
-    @seniors = User.where(superior: true).where.not(id: @user.id)
+  def index #A03
+    @user = User.find(params[:user_id]) #A03
+    @seniors = User.where(superior: true).where.not(id: @user.id) #A03
     #上長IDを自分以外にする
+
+    #A04    表示期間の勤怠データを日付順にソートして取得 
+    #show.html.erb、 <% @attendances.each do |attendance| %>からの情報
+    @attendances = @user.attendances.where('attendance_date >= ? and attendance_date <= ?', @first_day, @last_day).order("attendance_date ASC")
+    
+    # 上長画面で一ヶ月分勤怠申請のお知らせをカウントする
+    @monthly_confirmation_count = Attendance.monthly_confirmation(current_user)
   end
 
   def overwork_form
     @user = User.find(params[:user_id])
     @attendance = @user.attendances.find(params[:id])
-    #@seniors = User.where(superior: true)
     @seniors = User.where(superior: true).where.not(id: @user.id)
   end
 
-  def update_overwork
+  def update_overwork #A04残業更新
+    #debugger
+    @user = User.find(params[:user_id])
+    @attendance = @user.attendances.find(params[:id])
+      #チェックボックスはifで分岐だけでTBlのDBは入れてない
+    if params[:overday_check]
+      @attendance.overtime = @attendance.overtime + 1.day
+    end 
 
+    params[:attendance][:overwork_status] = "申請中"
+    if @attendance.update_attributes(overwork_params)
+      flash[:success] = "残業を申請しました。" # 更新成功時の処理
+    else # 更新失敗時の処理
+      flash[:danger] = "残業申請に失敗しました。"
+    end
+    redirect_to user_path(@user)
   end
-    
-    #A03残業申請　値入力確認
-    # tmp_date = @attendance.attendance_date
-    # tmp_hour = params[:attendance][:overtime].split(":")[0].to_i
-    # tmp_min = params[:attendance][:overtime].split(":")[1].to_i
-    # @attendance.overtime = tmp_date + tmp_hour.hour + tmp_min.minute
-    
-    # #チェックボックスはifで分岐だけでデータベースには入れない
-    # if params[:overday_check]
-    #   @attendance.overtime = @attendance.overtime + 1.day
-    # end 
-    
-    # @attendance.user_id = current_user.id
-    # #指示者確認・パラメーターでユーザーの名前を検索してidを入れる
-    # @attendance.overwork_approver_id = User.where(name: params[:user][:name]).first.id
-    # @attendance.task_memo = params[:attendance][:task_memo]
-    # if @attendance.save
-    #   redirect_to attendances_path, notice: '残業申請を送付しました。' 
-    # else
-    #   redirect_to attendances_path, notice: '残業申請は失敗しました。' 
-    # end
-
+ 
   
 
   def edit_one_month
@@ -108,18 +107,31 @@ class AttendancesController < ApplicationController
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
   
-  # def index  #A03残業申請　変数定義
-  #   # @attendances = @user.attendances.where('attendance_date >= ? and attendance_date <= ?', @first_day, @last_day).order("attendance_date ASC")
-  #   # @seniors = User.where(is_senior: true).map(&:name)
-    
-  # end
+  #A04残業承認
+  def overwork_confirmation_form
+    #ユーザ定義
+    @user = User.find(params[:user_id])
+    #未承認かつidがcurrent_user
+    @attendances = Attendance.where(monthly_confirmation_status: :pending, monthly_confirmation_approver_id: current_user.id)
+    #ユーザー（user_id)ごとに勤怠のオブジェクトを分ける
+    tmp_pending_users = @attendances.group_by(&:user_id)
+    #未承認のユーザーの名前と、　　＃まだ一ヶ月分勤怠申請
+    @pending_users = {}
+  end
 
-  #A03
-  # def edit
-  #   @attendance = Attendance.find(params[:id])
-  #   @superior = User.where(superior: true).map(&:name)
-  #   #@days_of_the_week = %w[日 月 火 水 木 金 土]#youbi
-  # end
+  #A04上長承認
+  def monthly_confirmation_form
+    #ユーザ定義
+    @user = User.find(params[:user_id])
+    #未承認かつidがcurrent_user
+    @attendances = Attendance.where(monthly_confirmation_status: :pending, monthly_confirmation_approver_id: current_user.id)
+    #ユーザー（user_id)ごとに勤怠のオブジェクトを分ける
+    tmp_pending_users = @attendances.group_by(&:user_id)
+    #未承認のユーザーの名前と、　　＃まだ一ヶ月分勤怠申請
+    @pending_users = {}
+
+  end
+
 
   private #11.3.2add
   
@@ -128,8 +140,11 @@ class AttendancesController < ApplicationController
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
     end
     
-    # beforeフィルター
-	
+    def overwork_params
+      params.require(:attendance).permit(:overtime, :overday_check, :task_memo, :overwork_sperior, :overwork_status)
+    end
+
+
     # 管理権限者、または現在ログインしているユーザーを許可します。
     def admin_or_correct_user
       @user = User.find(params[:user_id]) if @user.blank?
@@ -138,4 +153,5 @@ class AttendancesController < ApplicationController
         redirect_to(root_url)
       end  
     end
+
 end

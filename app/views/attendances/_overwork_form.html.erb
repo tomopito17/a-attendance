@@ -43,14 +43,13 @@
                         <td><%= f.time_field :overtime %></td>
 
                         <!--翌日のチェックボックス-->
-                        　<td><%= f.check_box :overday_check %></td>
+                        <td><%= f.check_box :overday_check %></td>
                         <!--業務処理内容 備考-->
                         <td><%= f.text_field :task_memo %></td>
 
                         <!--指示者確認（印)-->
                         <td><%= f.collection_select :overwork_sperior, @seniors, :id, :name, prompt: "選択してください" %></td>
                         <!-- ↑@Seniors nameカラム 　表記-->
-
                     </tr>
                 </tbody>
 

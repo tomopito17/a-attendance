@@ -22,17 +22,28 @@ Rails.application.routes.draw do
     end
 
     resources :attendances, only: :update do # この行を追加します。#A03
-      member do
+      collection do #A04 
+        get 'overwork_confirmation_form'
+        patch 'update_overwork_confirmation_form'
+        get 'monthly_confirmation_form'
+        patch 'update_monthly_confirmation_form'
+      end
+      member do #A03残業申請
         get 'overwork_form' #A03残業申請
-        patch 'update_overwork' #A03残業申請更新
-        
+        patch 'update_overwork' #A03残業申請更新  
       end
     end
-
   end  
 
-  #拠点情報
+   #拠点情報
   resources :working_places#A02追加0509
- 
-
 end
+
+#A04上長画面一ヶ月分勤怠申請のお知らせフォーム
+  # get  '/monthly_confirmation_form',    to: 'attendances#monthly_confirmation_form'
+  # post  '/monthly_confirmation_form',    to: 'attendances#monthly_confirmation_form'
+  
+  #A04一ヶ月分の申請
+  #patch  '/monthly_confirmation',    to: 'attendances#monthly_confirmation'
+
+
