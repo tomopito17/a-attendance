@@ -23,10 +23,12 @@ ActiveRecord::Schema.define(version: 20210613085111) do
     t.time "overtime"
     t.text "task_memo"
     t.string "overwork_status"
-    t.boolean "overday_check"
+    t.boolean "overday_check", default: false
     t.integer "overwork_sperior"
+    t.string "indicater_check"
     t.integer "monthly_confirmation_approver_id"
     t.integer "monthly_confirmation_status"
+    t.boolean "change", default: false
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -39,14 +41,14 @@ ActiveRecord::Schema.define(version: 20210613085111) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "department"
-    t.datetime "basic_time", default: "2021-07-19 23:00:00"
-    t.datetime "work_time", default: "2021-07-19 22:30:00"
+    t.datetime "basic_time", default: "2021-07-31 23:00:00"
+    t.datetime "work_time", default: "2021-07-31 22:30:00"
     t.string "affiliation"
     t.integer "employee_number"
     t.integer "uid"
-    t.datetime "basic_work_time"
-    t.datetime "designated_work_start_time"
-    t.datetime "designated_work_end_time"
+    t.datetime "basic_work_time", default: "2021-07-31 23:00:00"
+    t.time "designated_work_start_time", default: "2000-01-01 00:00:00"
+    t.time "designated_work_end_time", default: "2000-01-01 09:00:00"
     t.boolean "superior"
     t.string "password"
     t.index ["email"], name: "index_users_on_email", unique: true

@@ -39,9 +39,10 @@ class AttendancesController < ApplicationController
     #   redirect_to attendances_path, notice: '残業申請を送付しました。' 
     # else
     #   redirect_to attendances_path, notice: '残業申請は失敗しました。' 
-    # end
-    
+    # end   
   end
+
+
   def index #A03
     @user = User.find(params[:user_id]) #A03
     @seniors = User.where(superior: true).where.not(id: @user.id) #A03
@@ -62,14 +63,14 @@ class AttendancesController < ApplicationController
   end
 
   def update_overwork #A04残業更新
-    #debugger
-    @user = User.find(para  ms[:user_id])
+    @user = User.find(params[:user_id])
     @attendance = @user.attendances.find(params[:id])
       #チェックボックスはifで分岐だけでTBlのDBは入れてない
     if params[:overday_check] #A05add
       @attendance.overtime = @attendance.overtime + 1.day
     end 
-    params[:attendance][:overwork_status] = "申請中"
+    params[:attendance][:overwork_status] = "申請中" #A05追加
+    @attendance.task_memo = params[:attendance][:task_memo] #A05追加
     if @attendance.update_attributes(overwork_params)
       flash[:success] = "残業を申請しました。" # 更新成功時の処理
     else # 更新失敗時の処理
@@ -81,6 +82,8 @@ class AttendancesController < ApplicationController
   
 
   def edit_one_month
+    @attendance = Attendance.find(params[:id])
+    #@seniors = User.where(superior: true).where.not( id: current_user.id)
   end
   
   def update_one_month
@@ -108,17 +111,66 @@ class AttendancesController < ApplicationController
   
   #A04残業承認
   def overwork_confirmation_form
-    #ユーザ定義
-    @user = User.find(params[:user_id])
-    #未承認かつidがcurrent_user
-    @attendances = Attendance.where(monthly_confirmation_status: :pending, monthly_confirmation_approver_id: current_user.id)
-    #ユーザー（user_id)ごとに勤怠のオブジェクトを分ける
-    tmp_pending_users = @attendances.group_by(&:user_id)
-    #未承認のユーザーの名前と、　　＃まだ一ヶ月分勤怠申請
-    @pending_users = {}
+    @user = User.find(params[:user_id]) #ユーザ定義
+    @attendances = Attendance.where(overwork_status: "申請中", overwork_sperior: @user.id).order(:user_id).group_by(&:user_id)
+    #ログイン中の上長名表示、申請ステータス選択
   end
 
-  #A04上長承認
+  #A05 残業承認モーダル更新
+  def update_overwork_confirmation_form
+    ActiveRecord::Base.transaction do
+      o1 = 0
+      o2 = 0
+      o3 = 0
+      overwork_confirmation_form_params.each do |id, item|
+        if (item[:overwork_status].present?) && (item[:change] == "1" )
+           #↑残業申請ステータスに値入力の有無と変更の値入力確認 
+          if (item[:overwork_status] == "なし") || (item[:overwork_status] == "申請中") || (item[:overwork_status] == "承認") || (item[:overwork_status] == "否認")
+            attendance = Attendance.find(id)
+            user = User.find(attendance.user_id)
+            #残業申請の申請ステータス変更なし
+            if item[:overwork_status] == "なし"
+              o1 += 1
+              item[:overtime] = nil
+              item[:overday_check] = nil
+              #item[:task_memo] = nil
+            elsif item[:overwork_status] == "申請中"
+              o1 += 1
+              item[:overtime] = nil
+              item[:overday_check] = nil
+              #item[:task_memo] = nil
+              #残業承認
+            elsif item[:overwork_status] == "承認"
+              o2 += 1
+              flash[:success] = "残業申請を承認しました"
+            #残業否認
+            elsif item[:overwork_status] == "否認"
+              item[:overtime] = nil
+              item[:overday_check] = nil
+              #item[:task_memo] = nil
+              o3 += 1
+              flash[:danger] = "残業申請を否認しました"
+            end
+            attendance.update_attributes!(item)
+          end
+        else
+          flash[:danger] = "指示者確認の入力、または変更にチェックを入れて下さい" 
+          redirect_to user_url(params[:user_id])
+          return
+        end
+      end
+      flash[:success] = "指定の内容に更新完了しました"
+      flash[:success] = "【残業申請】　#{o1}件未完了、　#{o2}件承認、　#{o3}件否認しました"
+      redirect_to user_url(params[:user_id])
+      return
+    end
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = "無効なデータ入力があった為、更新をキャンセルしました"
+    redirect_to overwork_confirmation_form_user_attendances_path(@user)
+  end
+
+
+  #A04上長1ヶ月勤怠承認
   def monthly_confirmation_form
     #ユーザ定義
     @user = User.find(params[:user_id])
@@ -132,15 +184,19 @@ class AttendancesController < ApplicationController
   end
 
 
-  private #11.3.2add
+   private #11.3.2add
   
   # 1ヶ月分の勤怠情報を扱います。
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
     end
     
-    def overwork_params
+    def overwork_params #A04add
       params.require(:attendance).permit(:overtime, :overday_check, :task_memo, :overwork_sperior, :overwork_status)
+    end
+
+    def overwork_confirmation_form_params #A05 attendancesテーブルの（指示者確認、変更）
+      params.require(:user).permit(attendances: [:task_memo, :overwork_status, :change, :indicater_check, :overtime, :indicater_check_anser])[:attendances]
     end
 
 

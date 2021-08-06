@@ -1,28 +1,60 @@
 <% provide(:title, @user.name) %>
+<div>
+  <table class="table table-bordered table-condensed user-table">
+    <tr>
+      <td>
+        <%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-primary btn-set-month" %>
+        　<%= l(@first_day, format: :middle) %>時間管理表　
+        <%= link_to "→", user_path(date: @first_day.next_month), class: "btn btn-primary btn-set-month" %>  
+      </td>
+      <td>
+        指定勤務開始時間：<%= format_basic_info(@user.designated_work_start_time) %></br>
+        指定勤務終了時間：<%= format_basic_info(@user.designated_work_end_time) %>
+      </td>
+      <td colspan="3">基本時間：<%= format_basic_info(@user.basic_work_time) %></td>
+      <td>初日：<%= l(@first_day, format: :short) %></td>
+    </tr>
+    
+    <tr>
+      <td>所属：<%= @user.affiliation.present? ? @user.affiliation : "未所属" %></td>
+      <td>氏名：<%= @user.name %></td>
+      <td>コード</td>
+      <td><%= @user.employee_number %></td>
+      <td>出勤日数：<%= @worked_sum %>日</td>
+      <td>締め：<%= l(@last_day, format: :short) %></td>
+    </tr>
+  </table>
+</div>
 
 <!--A04上長で（自分かどうか）&未承認だったら申請のお知らせの表示・未承認のものがあれば文字は赤色-->
-<% if current_user.superior? %>
+<%# if current_user.superior? %>
+<!-- 一時無効 -->
 
 <!-- 所属長承認リンクを押すとモーダルへ飛ぶ-->
-<%= link_to "【所属長承認のお知らせ】", monthly_confirmation_form_user_attendances_path(@user), remote: true %>
+<%= link_to "【所属長承認のお知らせ】", monthly_confirmation_form_user_attendances_path(@user), remote: true %><!-- 上長承認の件数をカウント--><%= @monthly_confirmation_count %><br>
+
 
 <!-- 勤怠変更の承認リンクを押すとモーダルへ飛ぶ-->
-<%= link_to "【勤怠変更のお知らせ】", "#", remote: true %>
+<%= link_to "【勤怠変更のお知らせ】", "#", remote: true %><br>
 
 <!-- 残業申請承認リンクを押すとモーダルへ飛ぶ-->
 <%= link_to "【残業申請のお知らせ】",  overwork_confirmation_form_user_attendances_path(@user), remote: true %>
+<%# end %><!-- 一時無効 -->
+<div class="btn-users-show">
+ <%= link_to "勤怠を編集", "#", class: "btn btn-primary" %>
+  <%#= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>
+  <%#= link_to "CSV出力", user_path(format: 'csv'), class: "btn btn-primary" %>
+  <%#= link_to "勤怠修正ログ（承認済み）", log_user_attendance_path(@user, @attendance), class: "btn btn-primary" %>
+</div>
 
-<!-- 上長承認の件数をカウント-->
-<%= @monthly_confirmation_count %>
-<% end %>
 
 <%# <h1><%= @user.name >%, <%= @user.email >%</h1>--> %>
 <div><%#10.2 で月日分を追加%>
     <table class="table table-bordered table-condensed user-table">
         <tr>
             <td>【<%= l(@first_day, format: :middle) %>】勤怠管理表</td> <%#10.4 update%>
-            <td>指定勤務時間：<%= format_basic_info(@user.work_time) %></td>
-            <td>基本時間：<%= format_basic_info(@user.basic_time) %></td>
+            <td>指定勤務時間：<%#= format_basic_info(@user.work_time) %></td>
+            <td>基本時間：<%#= format_basic_info(@user.basic_time) %></td>
             <td>月初日：<%= l(@first_day, format: :short) %></td><%#10.3update%>
         </tr>
 

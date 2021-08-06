@@ -21,9 +21,15 @@ class Attendance < ApplicationRecord
     end
   end
 
+  #A05
+  enum overwork_status:{ "なし" => 0, "承認" => 1, "否認" => 2, "申請中" => 4 }, _prefix: true
+
+  # enum indicater_reply: { "なし" => 0, "承認" => 1, "否認" => 2, "申請中" => 4 }, _prefix: true
+  # enum indicater_reply_edit: { "なし" => 0, "承認" => 1, "否認" => 2, "申請中" => 4 }, _prefix: true
+  # enum indicater_reply_month: { "なし" => 0, "承認" => 1, "否認" => 2, "申請中" => 4 }, _prefix: true
 
   #A04
-  enum monthly_confirmation_status: { nothing: 0, pending: 1, approval: 2, denial: 3 }
+  enum monthly_confirmation_status: { "なし" => 0, "承認" => 1, "否認" => 2, "申請中" => 4 }, _prefix: true
   
   # 【所属長承認のお知らせ】一ヶ月支持者確認がログインユーザーで、ステータスが未承認かどうか＆何月分の勤怠
   def self.monthly_confirmation(current_user)

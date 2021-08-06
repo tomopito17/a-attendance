@@ -104,8 +104,6 @@ class UsersController < ApplicationController
     end
   end
 
-
-
     # User.rbに記述すべきか確認
   #   def users_csv(file)
   #    CSV.foreach(file.path, headers: true) do |row|
@@ -115,11 +113,22 @@ class UsersController < ApplicationController
   #   end
   # end
 
+ #A05 「勤怠を確認する」ページ
+  def verification
+    @user = User.find(params[:id])
+    # 通知モーダルの確認ボタンを押下時にparams[：worked_on]にday.worked_onを入れて飛ばしたので、それをfind_byで取り出し
+    @attendance = Attendance.find_by(worked_on: params[:worked_on])
+    @first_day = @attendance.worked_on.beginning_of_month
+    @last_day = @first_day.end_of_month
+    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
+    @worked_sum = @attendances.where.not(started_at: nil).count
+  end
 
   private
 
     def user_params #9.1.3department
-      params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
+      params.require(:user).permit(:name, :email, :department, :password, :password_confirmation,
+      :employee_number, :uid, :basic_work_time, :designated_work_start_time, :designated_work_end_time)
     end
 
     def basic_info_params

@@ -18,7 +18,10 @@ Rails.application.routes.draw do
       get 'edit_basic_info'
       patch 'update_basic_info'
       get 'attendances/edit_one_month'  #11.1.1
-      patch 'attendances/update_one_month'  #11.1.5add      
+      patch 'attendances/update_one_month'  #11.1.5add 
+      #A05 「勤怠を確認する」ページ
+      get 'verification'
+      
     end
 
     resources :attendances, only: :update do # この行を追加します。#A03

@@ -39,4 +39,14 @@ module AttendancesHelper#10.6.1add
     return attendances
   end
 
+  # 時間外勤務 A05
+  def overtime_worked_on(finish, end_time, is_tomorrow)
+    #puts is_tomorrow.class ＜----tomorrowの型　確認
+    if is_tomorrow    # == true
+      # finishとend_timeの'時'と'分'をそれぞれ計算し、差分を合わせるために、分割を60で割る
+      format("%.2f", (((finish.hour - end_time.hour) + ((finish.min - end_time.min) / 60.0) + 24)))
+    else
+      format("%.2f", (((finish.hour - end_time.hour) + ((finish.min - end_time.min) / 60.0))))
+    end
+  end
 end
