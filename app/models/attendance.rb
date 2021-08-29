@@ -23,10 +23,10 @@ class Attendance < ApplicationRecord
 
   #A05
   enum overwork_status:{ "なし" => 0, "承認" => 1, "否認" => 2, "申請中" => 4 }, _prefix: true
-
-  # enum indicater_reply: { "なし" => 0, "承認" => 1, "否認" => 2, "申請中" => 4 }, _prefix: true
-  # enum indicater_reply_edit: { "なし" => 0, "承認" => 1, "否認" => 2, "申請中" => 4 }, _prefix: true
-  # enum indicater_reply_month: { "なし" => 0, "承認" => 1, "否認" => 2, "申請中" => 4 }, _prefix: true
+  #A06
+  enum indicater_reply: { "なし" => 0, "承認" => 1, "否認" => 2, "申請中" => 4 }, _prefix: true
+  enum indicater_reply_edit: { "なし" => 0, "承認" => 1, "否認" => 2, "申請中" => 4 }, _prefix: true
+  enum indicater_reply_month: { "なし" => 0, "承認" => 1, "否認" => 2, "申請中" => 4 }, _prefix: true
 
   #A04
   enum monthly_confirmation_status: { "なし" => 0, "承認" => 1, "否認" => 2, "申請中" => 4 }, _prefix: true

@@ -3,15 +3,15 @@
 <div>
   <table class="table table-bordered table-condensed user-table">
     <tr>
-      <td><%= l(@first_day, format: :middle) %>時間管理表</td>     
+      <td><%= l(@first_day, format: :middle) %>時間管理表</td>
       <td>
         指定勤務開始時間：<%= format_basic_info(@user.designated_work_start_time) %></br>
         指定勤務終了時間：<%= format_basic_info(@user.designated_work_end_time) %>
       </td>
-      <td colspan="3">基本時間：<%= l(@user.basic_time, format: :time) %></td>
+      <td colspan="3">基本時間：<%= l(@user.basic_work_time, format: :time) %></td>
       <td>初日：<%= l(@first_day, format: :short) %></td>
     </tr>
-    
+
     <tr>
       <td>所属：<%= @user.affiliation.present? ? @user.affiliation : "未所属" %></td>
       <td>氏名：<%= @user.name %></td>

@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
   # beforフィルター
   # paramsハッシュからユーザーを取得します。 11.1.3D_el
   def set_user
+    #debugger
     @user = User.find(params[:id])
   end
   # ログイン済みのユーザーか確認します。

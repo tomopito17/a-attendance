@@ -42,8 +42,9 @@ ja:
       long: "%Y年%m月%d日(%a)"
       middle: "%Y年%m月"
       short: "%-m/%-d"
+      month_only: "%-m" #A06
     month_names:
-    - 
+    -
     - 1月
     - 2月
     - 3月
@@ -200,6 +201,7 @@ ja:
       words_connector: "、"
   time:
     am: 午前
+    pm: 午後
     formats:
       default: "%Y年%m月%d日(%a) %H時%M分%S秒 %z"
       long: "%Y/%m/%d %H:%M"
@@ -207,4 +209,13 @@ ja:
       time: "%H：%M"
       hour_only: "%H時"
       minutes_only: "%M分"
-    pm: 午後
+
+
+  enums: # enum型に対する日本語定義であることを明示
+  attendance: # モデルを指定
+    indicater_reply:
+      not: なし
+      apporoval: 承認
+      denial: 否認
+      applying: 申請中
+      

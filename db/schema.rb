@@ -29,6 +29,20 @@ ActiveRecord::Schema.define(version: 20210613085111) do
     t.integer "monthly_confirmation_approver_id"
     t.integer "monthly_confirmation_status"
     t.boolean "change", default: false
+    t.datetime "started_before_at"
+    t.datetime "started_edit_at"
+    t.datetime "finished_before_at"
+    t.datetime "finished_edit_at"
+    t.string "indicater_check_month"
+    t.integer "indicater_reply_month"
+    t.string "indicater_check_edit"
+    t.integer "indicater_reply_edit"
+    t.boolean "tomorrow_edit", default: false
+    t.date "month_approval"
+    t.boolean "change_month", default: false
+    t.string "indicater_check_month_anser"
+    t.boolean "change_edit", default: false
+    t.string "indicater_check_edit_anser"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -41,12 +55,10 @@ ActiveRecord::Schema.define(version: 20210613085111) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "department"
-    t.datetime "basic_time", default: "2021-07-31 23:00:00"
-    t.datetime "work_time", default: "2021-07-31 22:30:00"
     t.string "affiliation"
     t.integer "employee_number"
     t.integer "uid"
-    t.datetime "basic_work_time", default: "2021-07-31 23:00:00"
+    t.datetime "basic_work_time", default: "2021-08-28 23:00:00"
     t.time "designated_work_start_time", default: "2000-01-01 00:00:00"
     t.time "designated_work_end_time", default: "2000-01-01 09:00:00"
     t.boolean "superior"

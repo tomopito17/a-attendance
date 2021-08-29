@@ -18,19 +18,28 @@ User.create!(name: "上長A",
             email: "sampleA@email.com",
             password: "password",
             password_confirmation: "password",
-            #affiliation: "Superior",
+            affiliation: "A",
             #employee_number: 1,
-            #uid: 1,
+            #uid: 2,
             superior: true)
             
 User.create!(name: "上長B",
             email: "sampleB@email.com",
             password: "password",
             password_confirmation: "password",
-            #affiliation: "Superior",
+            affiliation: "B",
             #employee_number: 2,
-            #uid: 2,
+            #uid: 3,
             superior: true)
+
+User.create!(name: "平社員_Tanaka",
+            email: "sam@email.com",
+            password: "password",
+            password_confirmation: "password",
+            affiliation: "Z",
+            #employee_number: 3,
+            #uid: 4,
+            superior: false)            
 
 10.times do |n|#A03 60->10に変更
   name  = Faker::Name.name

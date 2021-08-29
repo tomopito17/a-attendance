@@ -1,13 +1,12 @@
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
     <div class="modal-header">
-    <h2>勤怠申請の承認(1ヶ月)</h2>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body">
-      <%= form_with(model: @user, url: update_month_approval_notice_user_attendance_path(@user), method: :patch, local: true) do |f| %>
+      <%= form_with(model: @user, url: update_month_approval_notice_user_attendance_path, method: :patch, local: true) do |f| %>
         <% @indicater_approvals.each do |user| %>
           <h3 align="center" class="modal-title"><%= "【#{user.name}からの1ヶ月分勤怠申請】" %></h3>
             <table class="table table-bordered table-condensed overtime-table">
@@ -28,7 +27,7 @@
                         <td><%= l(day.month_approval, format: :month_only) %>月</td>
                         <td><%= attendance.select :indicater_reply_month, Attendance.indicater_reply_months.keys,{prompt: "選択して下さい"}, {class: "form-control input-sm", required: true} %></td>
                         <td><%= attendance.check_box :change_month %></td>
-                        <td><%= link_to "確認", verification_user_path(user.id, worked_on: day.worked_on), class: "btn btn-primary", target: :_blank %></td><!--user =>  users-->
+                        <td><%#= link_to "確認", verifacation_user_path(user.id, worked_on: day.worked_on), class: "btn btn-primary", target: :_blank %></td>
                       </tbody>
                     <% end %>
                   <% end %>

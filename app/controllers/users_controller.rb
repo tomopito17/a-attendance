@@ -35,10 +35,29 @@ class UsersController < ApplicationController
    #@users = User.paginate(page: params[:page]) #8.4.4 Del_@users = User.all#8.4.1
    #@users = User.where(activated: true).paginate(page: params[:page]).search(params[:search])
   end
-  
 
   def show
+    #debugger
     @worked_sum = @attendances.where.not(started_at: nil).count
+    #A06 1ヶ月申請ステータス
+    @month = Attendance.where(indicater_reply_month: "申請中", indicater_check_month: @user.name).count
+    @change = Attendance.where(indicater_reply_edit: "申請中", indicater_check_edit: @user.name).count
+    @seniors = User.where(superior: true).where.not(id: current_user.id)
+    #@attendance = @user.attendances.find(params[:id])
+    @attendance = @user.attendances.find_by(worked_on: @first_day)
+    #A06仮初期値
+    
+    # # 残業のカウント
+    @overtime_count = current_user.attendances.where(overwork_status: "申請中").count
+    @overtime_not_count = current_user.attendances.where(overwork_status: "否認").count
+    # # 勤怠変更のカウント
+    @change_count = current_user.attendances.where(indicater_reply_edit: "申請中").count
+    @change_not_count = current_user.attendances.where(indicater_reply_edit: "否認").count
+    # # 1ヶ月勤怠申請のカウント
+    @month_count = current_user.attendances.where(indicater_reply_month: "申請中").count
+    # @month_not_count = current_user.attendances.where(indicater_reply_month: "否認").count
+
+    # csv出力
     # @user = User.find(params[:id])
     #first_day = Date.current.beginning_of_month
     #last_day = @first_day.end_of_month
@@ -127,12 +146,12 @@ class UsersController < ApplicationController
   private
 
     def user_params #9.1.3department
-      params.require(:user).permit(:name, :email, :department, :password, :password_confirmation,
+      params.require(:user).permit(:name, :email, :affiliation, :password, :password_confirmation,
       :employee_number, :uid, :basic_work_time, :designated_work_start_time, :designated_work_end_time)
     end
 
     def basic_info_params
-      params.require(:user).permit(:department, :basic_time, :work_time)
+      params.require(:user).permit(:affiliation, :basic_work_time, :designated_work_start_time, :designated_work_end_time)
     end
     
 end
