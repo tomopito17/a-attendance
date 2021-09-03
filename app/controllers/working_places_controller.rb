@@ -4,18 +4,20 @@ class WorkingPlacesController < ApplicationController
   end
   
   def new
+    #debugger
     @working_place = WorkingPlace.new
   end
   
   def create
+    #debugger
    # @working_place = WorkingPlace.new(working_place_params)
-      if WorkingPlace.(working_place_params)#@working_place.save
-        flash.now[:success] = "拠点情報が登録されました"
-        redirect_to working_places_path
-      else
-        flash.now[:notice] = "登録できません"
-        render 'new'
-      end
+    if WorkingPlace.create(working_place_params)  #@working_place.save
+      flash.now[:success] = "拠点情報が登録されました"
+      redirect_to working_places_path
+    else
+      flash.now[:notice] = "登録できません"
+      render 'new'
+    end
   end
   
   def edit

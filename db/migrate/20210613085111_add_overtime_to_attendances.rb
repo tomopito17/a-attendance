@@ -20,6 +20,8 @@ class AddOvertimeToAttendances < ActiveRecord::Migration[5.1]
     add_column :attendances, :started_edit_at, :datetime
     add_column :attendances, :finished_before_at, :datetime
     add_column :attendances, :finished_edit_at, :datetime
+    # A06指示者確認
+    add_column :attendances, :indicater_reply, :integer
     #A06 どの上長に申請か
     add_column :attendances, :indicater_check_month, :string
     #A06 1ヶ月勤怠変更 指示者確認のセレクト
@@ -45,5 +47,7 @@ class AddOvertimeToAttendances < ActiveRecord::Migration[5.1]
     add_column :attendances, :change_edit, :boolean, default: false
     add_column :attendances, :indicater_check_edit_anser, :string
 
+    #A07確認
+    add_column :attendances, :verification, :boolean, default: false
   end
 end

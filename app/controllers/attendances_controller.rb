@@ -1,10 +1,11 @@
 class AttendancesController < ApplicationController
   include AttendancesHelper
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :overwork_form,:edit_one_month_notice, :update_month_approval, :monthly_confirmation_form ]#11.3.4 :update_one_month add A03 overworkform 
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_one_month_notice, :update_month_approval, :monthly_confirmation_form ]#11.3.4 :update_one_month add A03 overworkform 
   #A06 edit_one_month_notice, :update_month_approval, :monthly_confirmation_form
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month] #11.3.4
   before_action :set_one_month, only: [:edit_one_month ]
+  before_action :correct_user_a, only: [:log] #A07
 
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
 
@@ -55,6 +56,7 @@ class AttendancesController < ApplicationController
   end
 
   def overwork_form
+    #iddebugger
     @user = User.find(params[:user_id])
     @attendance = @user.attendances.find(params[:id])
     @seniors = User.where(superior: true).where.not(id: @user.id)
@@ -74,9 +76,9 @@ class AttendancesController < ApplicationController
     if @attendance.update_attributes(overwork_params)
       flash[:success] = "残業を申請しました。" # 更新成功時の処理
     else # 更新失敗時の処理
-      flash[:danger] = "残業申請に失敗しました。"
+      flash[:danger] = "残業申請に失敗しました。指示者確認を更新、または変更にチェックを入れて下さい"
     end
- 
+
     redirect_to user_path(@user)
   end
 
@@ -281,7 +283,7 @@ class AttendancesController < ApplicationController
   end
 
 
-  #A07 勤怠承認申請
+  #A06 勤怠承認申請
   def update_month_approval
     #debugger
     @attendance = @user.attendances.find_by(worked_on: params[:user][:month_approval]) #特定したユーザーの現在の月の取得
@@ -293,6 +295,78 @@ class AttendancesController < ApplicationController
     end
     redirect_to user_url(@user)
   end
+
+  # A07勤怠修正log処理
+  def log
+    @user = User.find(params[:user_id])
+    if params["worked_on(1i)"].present? && params["worked_on(2i)"].present? # もし受け取った値worked_on(1i)は年、(2iは月)
+      year_month = "#{params["worked_on(1i)"]}/#{params["worked_on(2i)"]}" # 受け取ったworked_onの年と月を"年/月"という文字列にしてyear_monthに代入
+      @day = DateTime.parse(year_month) if year_month.present? # year_monthが存在した場合は、Datetimeを日付に変換する
+      # @attendancesに@user.attendancesからindicater_reply_editから承認されたモノと、worked_on:カラムが@dayのモノを全て取得する
+      @attendances = @user.attendances.where(indicater_reply_edit: "承認").where(worked_on: @day.all_month)
+    else
+      @attendances = @user.attendances.where(indicater_reply_edit: "承認").order("worked_on ASC")
+    end
+  end
+
+  #A07 勤怠変更申請お知らせモーダル更新
+  def update_one_month_notice
+    ActiveRecord::Base.transaction do
+      e1 = 0
+      e2 = 0
+      e3 = 0
+      attendances_notice_params.each do |id, item|
+        if item[:indicater_reply_edit].present?
+          if (item[:change_edit] == "1") && (item[:indicater_reply_edit] == "なし" || item[:indicater_reply_edit] == "承認" || item[:indicater_reply_edit] == "否認")
+            attendance = Attendance.find(id)
+            user = User.find(attendance.user_id)
+            if item[:indicater_reply_edit] == "なし"
+              e1 += 1
+              item[:started_edit_at] = nil
+              item[:finished_edit_at] = nil
+              item[:tomorrow] = nil
+              item[:note] = nil
+              item[:indicater_check_edit] = nil
+            elsif item[:indicater_reply_edit] == "承認"
+              if attendance.started_before_at.blank?
+                item[:started_before_at] = attendance.started_at
+              end
+              item[:started_at] = attendance.started_edit_at
+              if attendance.finished_before_at.blank?
+                item[:finished_before_at] = attendance.finished_at
+              end
+              item[:finished_at] = attendance.finished_edit_at
+              item[:log_checked] = attendance.indicater_check_edit
+              item[:indicater_check_edit] = nil
+              e2 += 1
+              attendance.indicater_check_anser = "勤怠変更申請を承認しました"
+            elsif item[:indicater_reply_edit] == "否認"
+              item[:started_edit_at] = nil
+              item[:finished_edit_at] = nil
+              item[:tomorrow] = nil
+              item[:note] = nil
+              item[:indicater_check_edit] = nil
+              e3 += 1
+              attendance.indicater_check_edit_anser = "勤怠変更申請を否認しました"
+            end
+            attendance.update_attributes!(item)
+          end
+        else
+          flash[:danger] = "指示者確認を更新、または変更にチェックを入れて下さい"
+          redirect_to user_url(params[:user_id])
+          return
+        end
+      end
+      flash[:success] = "【勤怠変更申請】  #{e1}件なし、 #{e2}件承認、 #{e3}件を否認しました"
+      redirect_to user_url(params[:user_id])
+      return
+    end
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = "無効なデータがあった為、更新をキャンセルしました"
+    redirect_to edit_one_month_notice_user_attendance_url(@user, item)
+  end
+
+
 
   #A04上長1ヶ月勤怠承認
   # def monthly_confirmation_form
@@ -354,8 +428,8 @@ class AttendancesController < ApplicationController
     params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :started_edit_at, :finished_edit_at, :tomorrow_edit, :indicater_check_edit, :indicater_reply_edit, :task_memo])[:attendances]
   end
 
-  def overwork_params #A04add
-    params.require(:attendance).permit(:overtime, :overday_check, :task_memo, :overwork_sperior, :overwork_status)
+  def overwork_params #A04add #A07修正add
+    params.require(:attendance).permit(:overtime, :overday_check, :task_memo, :overwork_sperior, :overwork_status) #indicater_check
   end
 
   def overwork_confirmation_form_params #A05 attendancesテーブルの（指示者確認、変更）

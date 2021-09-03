@@ -1,6 +1,7 @@
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
     <div class="modal-header">
+    <h2>勤怠変更申請の承認</h2>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -27,7 +28,7 @@
                         <td><%= l(day.month_approval, format: :month_only) %>月</td>
                         <td><%= attendance.select :indicater_reply_month, Attendance.indicater_reply_months.keys,{prompt: "選択して下さい"}, {class: "form-control input-sm", required: true} %></td>
                         <td><%= attendance.check_box :change_month %></td>
-                        <td><%#= link_to "確認", verifacation_user_path(user.id, worked_on: day.worked_on), class: "btn btn-primary", target: :_blank %></td>
+                        <td><%= link_to "確認", verification_user_path(user.id, worked_on: day.worked_on), class: "btn btn-primary", target: :_blank %></td>
                       </tbody>
                     <% end %>
                   <% end %>

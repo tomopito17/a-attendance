@@ -68,6 +68,15 @@ class ApplicationController < ActionController::Base
     redirect_to root_url
   end
 end
+
+  # A07ログ専用のアクセスしたユーザーが現在ログインしているユーザーなのかを確認する
+  def correct_user_a
+    @user = User.find(params[:user_id])
+    unless current_user?(@user)
+      flash[:danger] = "他者のページは閲覧できません"
+      redirect_to root_url
+    end
+  end
     # unless one_month.count == @attendances.count
     #   ActiveRecord::Base.transaction do
     #     one_month.each { |day| @user.attendances.create!(worked_on: day) }

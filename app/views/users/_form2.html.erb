@@ -1,12 +1,12 @@
-<%= form_with(model: @user, local: true) do |f| %>
-  <%= render 'shared/error_messages', object: @user %>
+<%= form_with(model: user, url: update_index_user_path(user), local: true, method: :patch) do |f| %>
+  <%= render 'shared/error_messages', object: user %>
   
   <%= f.label :name, class: "label-#{yield(:class_text)}" %>
   <%= f.text_field :name, class: "form-control" %>
   
   <%= f.label :email, class: "label-#{yield(:class_text)}" %>
   <%= f.email_field :email, class: "form-control" %>
-  
+
   <%= f.label :affiliation, class: "label-#{yield(:class_text)}" %>
   <%= f.text_field :affiliation, class: "form-control" %>
   
@@ -31,5 +31,5 @@
   <%= f.label :designated_work_end_time, class: "label-#{yield(:class_text)}" %>
   <%= f.time_field :designated_work_end_time, class: "form-control" %>
   
-  <%= f.submit yield(:button_text), class: "btn btn-block btn-primary btn-#{yield(:class_text)}" %>
+  <%= f.submit "更新", class: "btn btn-block btn-primary btn-#{yield(:class_text)}" %>
 <% end %>

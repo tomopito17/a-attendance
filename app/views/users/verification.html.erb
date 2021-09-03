@@ -8,10 +8,10 @@
         指定勤務開始時間：<%= format_basic_info(@user.designated_work_start_time) %></br>
         指定勤務終了時間：<%= format_basic_info(@user.designated_work_end_time) %>
       </td>
-      <td colspan="3">基本時間：<%= l(@user.basic_work_time, format: :time) %></td>
+      <td colspan="3">基本時間：<%= format_basic_info(@user.basic_work_time) %></td>
       <td>初日：<%= l(@first_day, format: :short) %></td>
     </tr>
-
+    
     <tr>
       <td>所属：<%= @user.affiliation.present? ? @user.affiliation : "未所属" %></td>
       <td>氏名：<%= @user.name %></td>
@@ -19,10 +19,15 @@
       <td><%= @user.employee_number %></td>
       <td>出勤日数：<%= @worked_sum %>日</td>
       <td>締め：<%= l(@last_day, format: :short) %></td>
-    </tr> 
+    </tr>
   </table>
 </div>
 
+<!--<div class="btn-users-show">-->
+<!--  <#%= link_to "勤怠を編集", '#', class: "btn btn-default disabled" %>-->
+<!--  <#%= link_to "CSV出力", '#', class: "btn btn-default disabled" %>-->
+<!--  <#%= link_to "勤怠修正ログ（承認済み）", '#', class: "btn btn-default disabled" %>-->
+<!--</div>-->
 
 <div>
   <table class="table table-bordered table-condensed table-hover table-striped" id="table-attendances">
@@ -81,22 +86,17 @@
           <td><%= l(day.finished_at, format: :minutes_only) if day.finished_at.present? %></td>
           <td></td>
           <td>
-<%
-=begin%>
-              <% if day.started_edit_at.present? && day.finished_edit_at.present? %>
-              < %= str_times = overtime_worked_on(day.finished_edit_at, day.started_edit_at, day.tomorrow_edit) %>
+            <% if day.started_edit_at.present? && day.finished_edit_at.present? %>
+              <%= str_times = overtime_worked_on(day.finished_edit_at, day.started_edit_at, day.tomorrow_edit) %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
-            <% end %> 
-<%
-=end%>
-          <!--　コメントのままか確認
-              <#% if day.started_at.present? && day.finished_at.present? %>-->
+            <% end %>
+            <!--<#% if day.started_at.present? && day.finished_at.present? %>-->
               <!--@total_working_timesを累計在社時間に使用するため、str_timesに代入処理-->
             <!--  <#%= str_times = working_times(day.started_at, day.finished_at) %>-->
             <!--  <#% @total_working_times = @total_working_times.to_f + str_times.to_f %>-->
-            <!--<#% end %>  ここまでコメントのままか-->
+            <!--<#% end %>-->
           </td>
-          <td><%= day.task_memo %></td>
+          <td><%= day.note %></td>
           <td><%= l(day.overtime, format: :hour_only) if day.overtime.present? %></td>
           <td><%= l(day.overtime, format: :minutes_only) if day.overtime.present? %></td>
           <% if day.overtime.present? %>
@@ -104,36 +104,32 @@
           <% else %>
             <td></td>
           <% end %>
-          <!--
-          <td><#%= day.overtime_work %></td>
+          <td><%= day.task_memo %></td>
           <td>
-            < % if day.indicater_check_edit.present? %>
-              < %#= "#{day.indicater_check_edit}に勤怠変更#{day.indicater_reply_edit}" %>
-            < % else %>
-              < % if day.indicater_reply_edit == "承認" %>
-                < %#= indicater_check_edit_anser = "勤怠変更申請が承認されました" %>
-              < % elsif day.indicater_reply_edit == "否認" %>
-                < %= indicater_check_edit_anser = "勤怠変更申請が否認されました" %>
-              < % end %>
-            < % end %>
+            <% if day.indicater_check_edit.present? %>
+              <%= "#{day.indicater_check_edit}に勤怠変更#{day.indicater_reply_edit}" %>
+            <% else %>
+              <% if day.indicater_reply_edit == "承認" %>
+                <%= indicater_check_edit_anser = "勤怠変更申請が承認されました" %>
+              <% elsif day.indicater_reply_edit == "否認" %>
+                <%= indicater_check_edit_anser = "勤怠変更申請が否認されました" %>
+              <% end %>
+            <% end %>
           </td>
           <td>
-            < % if day.indicater_check.present? %>
-              < %= "#{day.indicater_check}に残業#{day.indicater_reply}" %>
-            < % else %>
-              < % if day.indicater_reply == "承認" %>
-                < %= indicater_check_anser = "残業申請が承認されました" %>
-              < % elsif day.indicater_reply == "否認" %>
-                < %= indicater_check_anser = "残業申請が否認されました" %>
-              < % end %>
-            < % end %>
-          </td> 
-         -->
+            <% if day.indicater_check.present? %>
+              <%= "#{day.indicater_check}に残業#{day.indicater_reply}" %>
+            <% else %>
+              <% if day.indicater_reply == "承認" %>
+                <%= indicater_check_anser = "残業申請が承認されました" %>
+              <% elsif day.indicater_reply == "否認" %>
+                <%= indicater_check_anser = "残業申請が否認されました" %>
+              <% end %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
-<%
-=begin%>
- </tbody>
+</tbody>
     
     <tfoot>
       <tr>
@@ -171,9 +167,8 @@
           <% end %>
         </td>
       </tr>
-    </tfoot> 
-<%
-=end%>
+    </tfoot>
   </table>
-</div> 
+</div>
+
 

@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:edit, :update]
-  before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info]
+  before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info, :working_employees, :index]
   before_action :set_one_month, only: :show
   before_action :admin_or_correct, only: %i(show)
  #logged_in_user 8.4add_index,8.5.2add_destroy,9.3Del show add basicinfo
@@ -27,11 +27,24 @@ class UsersController < ApplicationController
 
 
   def index
-    if params[:search].present?
-      @users = User.paginate(page: params[:page]).search(params[:search])
-    else
-      @users = User.paginate(page: params[:page])
+      @users = User.where.not(id: 1)
+      respond_to do |format|
+      format.html do
+      end
+      format.csv do
+        send_data render_to_string,filename:"original_filename.csv",type: :csv
+      end
     end
+
+    #勤怠B
+    # if params[:search].present?
+    #   @users = User.paginate(page: params[:page]).search(params[:search])
+    # else
+    #   @users = User.paginate(page: params[:page])
+    # end
+
+
+   #Tutorial
    #@users = User.paginate(page: params[:page]) #8.4.4 Del_@users = User.all#8.4.1
    #@users = User.where(activated: true).paginate(page: params[:page]).search(params[:search])
   end
@@ -39,6 +52,9 @@ class UsersController < ApplicationController
   def show
     #debugger
     @worked_sum = @attendances.where.not(started_at: nil).count
+    @overtime = Attendance.where(overwork_status: "申請中", overwork_sperior: @user.id).count 
+    #debugger
+    #overwork_status: "申請中"
     #A06 1ヶ月申請ステータス
     @month = Attendance.where(indicater_reply_month: "申請中", indicater_check_month: @user.name).count
     @change = Attendance.where(indicater_reply_edit: "申請中", indicater_check_edit: @user.name).count
@@ -53,10 +69,16 @@ class UsersController < ApplicationController
     # # 勤怠変更のカウント
     @change_count = current_user.attendances.where(indicater_reply_edit: "申請中").count
     @change_not_count = current_user.attendances.where(indicater_reply_edit: "否認").count
-    # # 1ヶ月勤怠申請のカウント
+    #A07 # 1ヶ月勤怠申請のカウント
     @month_count = current_user.attendances.where(indicater_reply_month: "申請中").count
-    # @month_not_count = current_user.attendances.where(indicater_reply_month: "否認").count
+    @month_not_count = current_user.attendances.where(indicater_reply_month: "否認").count
 
+  #A07 csv出力エクスポート
+    respond_to do |format|
+      format.html
+      filename = @user.name + "：" + l(@first_day, format: :middle) + "分" + " " + "勤怠"
+      format.csv { send_data render_to_string, type: 'text/csv; charset=shift_jis', filename: "#{filename}.csv" }
+    end
     # csv出力
     # @user = User.find(params[:id])
     #first_day = Date.current.beginning_of_month
@@ -141,6 +163,11 @@ class UsersController < ApplicationController
     @last_day = @first_day.end_of_month
     @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
     @worked_sum = @attendances.where.not(started_at: nil).count
+  end
+
+    def working_employees #A07
+    # ユーザーモデルから勤怠達を取得
+    @users = User.all.includes(:attendances)
   end
 
   private

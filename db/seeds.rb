@@ -12,6 +12,7 @@ User.create!(name: "Sample User",
               email: "sample@email.com",
               password: "password",
               password_confirmation: "password",
+              affiliation: "管理者",
               admin: true)
 
 User.create!(name: "上長A",

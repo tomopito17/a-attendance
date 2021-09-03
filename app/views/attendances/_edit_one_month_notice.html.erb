@@ -1,6 +1,7 @@
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
     <div class="modal-header">
+    <h2>勤怠変更の承認</h2>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
         <span aria-hidden="true">&times;</span>
       </button>
@@ -75,7 +76,7 @@
                       <td><%= day.note %></td>
                       <td><%= d.select :indicater_reply_edit, Attendance.indicater_reply_edits.keys,{prompt: "選択して下さい"}, {class: "form-control input-sm" , required: true} %></td>
                       <td><%= d.check_box :change_edit %></td>
-                      <td><%= link_to "確認", verifacation_user_path(user.id, worked_on: day.worked_on), class: "btn btn-primary", target: :_blank %></td>
+                      <td><%= link_to "確認", verification_user_path(user.id, worked_on: day.worked_on), class: "btn btn-primary", target: :_blank %></td>
                     </tbody>
                   <!--<%# end %>-->
                 <% end %>

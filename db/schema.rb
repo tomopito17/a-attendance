@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20210613085111) do
     t.datetime "started_edit_at"
     t.datetime "finished_before_at"
     t.datetime "finished_edit_at"
+    t.integer "indicater_reply"
     t.string "indicater_check_month"
     t.integer "indicater_reply_month"
     t.string "indicater_check_edit"
@@ -43,6 +44,7 @@ ActiveRecord::Schema.define(version: 20210613085111) do
     t.string "indicater_check_month_anser"
     t.boolean "change_edit", default: false
     t.string "indicater_check_edit_anser"
+    t.boolean "verification", default: false
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -58,7 +60,7 @@ ActiveRecord::Schema.define(version: 20210613085111) do
     t.string "affiliation"
     t.integer "employee_number"
     t.integer "uid"
-    t.datetime "basic_work_time", default: "2021-08-28 23:00:00"
+    t.datetime "basic_work_time", default: "2021-09-02 23:00:00"
     t.time "designated_work_start_time", default: "2000-01-01 00:00:00"
     t.time "designated_work_end_time", default: "2000-01-01 09:00:00"
     t.boolean "superior"

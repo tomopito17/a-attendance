@@ -41,12 +41,13 @@
 
   <!-- 残業申請承認リンクを押すとモーダルへ飛ぶ-->
 <%= link_to "【残業申請のお知らせ】",  overwork_confirmation_form_user_attendances_path(@user), remote: true %>
+<span class = "red-box"><%= "#{@overtime}件の通知があります" %></span>
 <% end %><!-- 一時無効 -->
 
 <div class="btn-users-show">
   <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>
   <%= link_to "CSV出力", user_path(format: 'csv'), class: "btn btn-primary" %>
-  <%#= link_to "勤怠修正ログ（承認済み）", log_user_attendance_path(@user, @attendance), class: "btn btn-primary" %>
+  <%= link_to "勤怠修正ログ（承認済み）", log_user_attendance_path(@user, @attendance), class: "btn btn-primary" %>
 </div>
 
 
@@ -231,5 +232,7 @@
 <div id="overwork-request" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <!-- モーダル呼び出し 残業申請の承認-->
 <div id="overwork-confirmation" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!-- モーダル呼び出し 勤怠変更申請の承認-->
+<div id="edit-one-month-notice" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <!-- モーダル呼び出し 上長１ヶ月承認-->
 <div id="monthly-confirmation" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

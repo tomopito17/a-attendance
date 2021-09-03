@@ -31,6 +31,11 @@ Rails.application.routes.draw do
       get 'verification'
     end
 
+    collection do
+      # 出社中社員ページ
+      get 'working_employees'
+    end
+
     resources :attendances, only: [:update] do # この行を追加します。#A03
       collection do #A04
         get 'overwork_confirmation_form'
