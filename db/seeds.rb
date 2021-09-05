@@ -20,7 +20,7 @@ User.create!(name: "上長A",
             password: "password",
             password_confirmation: "password",
             affiliation: "A",
-            #employee_number: 1,
+            #employee_number: 2,
             #uid: 2,
             superior: true)
             
@@ -29,7 +29,7 @@ User.create!(name: "上長B",
             password: "password",
             password_confirmation: "password",
             affiliation: "B",
-            #employee_number: 2,
+            #employee_number: 3,
             #uid: 3,
             superior: true)
 
@@ -38,7 +38,7 @@ User.create!(name: "平社員_Tanaka",
             password: "password",
             password_confirmation: "password",
             affiliation: "Z",
-            #employee_number: 3,
+            #employee_number: 4,
             #uid: 4,
             superior: false)            
 
