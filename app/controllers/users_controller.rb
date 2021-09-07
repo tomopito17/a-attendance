@@ -34,7 +34,7 @@ class UsersController < ApplicationController
       # format.csv do
       #   send_data render_to_string,filename:"original_filename.csv",type: :csv
       # end
-    end
+    #end
 
     #勤怠B
     # if params[:search].present?
