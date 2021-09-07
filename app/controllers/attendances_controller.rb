@@ -163,7 +163,7 @@ class AttendancesController < ApplicationController
   #A04残業承認
   def overwork_confirmation_form
     @user = User.find(params[:user_id]) #ユーザ定義
-    @attendances = Attendance.where(overwork_status: "申請中", overwork_sperior: @user.id).order(:user_id).group_by(&:user_id)
+    @attendances = Attendance.where(overwork_status: "申請中", overwork_sperior: @user.id).order(:user_id, :worked_on).group_by(&:user_id)
     #ログイン中の上長名表示、申請ステータス選択
   end
 

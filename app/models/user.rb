@@ -66,12 +66,12 @@ class User < ApplicationRecord
 
 
   #CSVインポート A01
-  def self.csv_attributes
-    ["name", "email", "affiliation", "employee_number", "uid", "basic_work_time", "designated_work_start_time","designated_work_end_time", "superior","admin","password"]
-  end
+  # def self.csv_attributes
+  #   ["name", "email", "affiliation", "employee_number", "uid", "basic_work_time", "designated_work_start_time","designated_work_end_time", "superior","admin","password"]
+  # end
 
   def self.import_csv(file)
-   #CSV.foreach(file.path, headers:true) do |row|
+   #CSV.foreach(file.path, headers:true) do |row| #UTF8のみに指定
     CSV.foreach(file.path,'r:cp932:utf8',headers:true) do |row|
       #ID 見つかればレコード入力、なければ新規作成
       user = find_by(id: row["id"]) || new

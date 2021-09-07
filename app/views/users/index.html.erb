@@ -5,7 +5,7 @@
 <div class="col-md-10 col-md-offset-1 ">
 	<table class="table table-condensed table-hover" id="table-users">
     <tr>   <%# CSVインポート　<div class="import">%>
-      <%= form_tag(import_csv_path, :method => :post, multipart: true, class: "col-lg-4" ) do %>
+      <%= form_tag(import_csv_path, data: {"turbolinks" => false}, :method => :post, multipart: true, class: "col-lg-4" ) do %>
         <%= file_field_tag(:file) %>
         <%= submit_tag "CSVインポート", class: "btn btn-primary btn-sm" %>
     	<% end %>

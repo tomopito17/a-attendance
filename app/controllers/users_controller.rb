@@ -27,13 +27,13 @@ class UsersController < ApplicationController
 
 
   def index
-      @users = User.where.not(id: 1)
-      respond_to do |format|
-      format.html do
-      end
-      format.csv do
-        send_data render_to_string,filename:"original_filename.csv",type: :csv
-      end
+      @users = User.where.not(id: 1).order(:id)
+      # respond_to do |format|
+      # format.html do
+      # end
+      # format.csv do
+      #   send_data render_to_string,filename:"original_filename.csv",type: :csv
+      # end
     end
 
     #勤怠B
