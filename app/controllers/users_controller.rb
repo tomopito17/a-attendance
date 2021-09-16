@@ -4,7 +4,9 @@ class UsersController < ApplicationController
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info, :working_employees, :index]
   before_action :set_one_month, only: :show
-  before_action :admin_or_correct, only: %i(show)
+  before_action :admin_or_correct, only: %i(show)#A09-1
+  before_action :admin_not, only: :show  #A09-1
+  before_action :correct_not, only: :show #A09-1
  #logged_in_user 8.4add_index,8.5.2add_destroy,9.3Del show add basicinfo
 
 # CSVimport
@@ -28,13 +30,13 @@ class UsersController < ApplicationController
 
   def index
       @users = User.where.not(id: 1).order(:id)
-      # respond_to do |format|
-      # format.html do
-      # end
-      # format.csv do
-      #   send_data render_to_string,filename:"original_filename.csv",type: :csv
-      # end
-    #end
+        # respond_to do |format|
+        # format.html do
+        # end
+        # format.csv do
+        #   send_data render_to_string,filename:"original_filename.csv",type: :csv
+        # end
+      #end
 
     #勤怠B
     # if params[:search].present?
@@ -52,7 +54,7 @@ class UsersController < ApplicationController
   def show
     #debugger
     @worked_sum = @attendances.where.not(started_at: nil).count
-    @overtime = Attendance.where(overwork_status: "申請中", overwork_sperior: @user.id).count 
+    @overtime = Attendance.where(overwork_status: "申請中", overwork_sperior: @user.id).count
     #debugger
     #overwork_status: "申請中"
     #A06 1ヶ月申請ステータス

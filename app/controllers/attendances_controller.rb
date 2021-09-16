@@ -3,8 +3,10 @@ class AttendancesController < ApplicationController
   before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_one_month_notice, :update_month_approval, :monthly_confirmation_form ]#11.3.4 :update_one_month add A03 overworkform 
   #A06 edit_one_month_notice, :update_month_approval, :monthly_confirmation_form
   before_action :logged_in_user, only: [:update, :edit_one_month]
-  before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month] #11.3.4
+  before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month] #11.3.4 
+  before_action :admin_user, only: [:index, :destroy, :edit_basic_info] #A09-1
   before_action :set_one_month, only: [:edit_one_month ]
+  before_action :admin_not#A09-1
   before_action :correct_user_a, only: [:log] #A07
 
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
@@ -163,7 +165,9 @@ class AttendancesController < ApplicationController
   #A04残業承認
   def overwork_confirmation_form
     @user = User.find(params[:user_id]) #ユーザ定義
-    @attendances = Attendance.where(overwork_status: "申請中", overwork_sperior: @user.id).order(:user_id, :worked_on).group_by(&:user_id)
+    @attendances = Attendance.where(overwork_status: "申請中", overwork_sperior: @user.id).order(:user_id, :id).group_by(&:user_id)
+    #debugger
+    #binding.pry
     #ログイン中の上長名表示、申請ステータス選択
   end
 
@@ -187,8 +191,8 @@ class AttendancesController < ApplicationController
               #item[:task_memo] = nil
             elsif item[:overwork_status] == "申請中"
               o1 += 1
-              item[:overtime] = nil
-              item[:overday_check] = nil
+              #item[:overtime] = nil
+              #item[:overday_check] = nil
               #item[:task_memo] = nil
               #残業承認
             elsif item[:overwork_status] == "承認"
@@ -222,7 +226,6 @@ class AttendancesController < ApplicationController
 
 
   # ここからは勤怠の1ヶ月分の勤怠承認に関する処理
-
   # 勤怠承認申請
   # def update_month_approval
   #   @attendance = @user.attendances.find_by(worked_on: params[:user][:month_approval]) #特定したユーザーの現在の月の取得
@@ -324,7 +327,7 @@ class AttendancesController < ApplicationController
               e1 += 1
               item[:started_edit_at] = nil
               item[:finished_edit_at] = nil
-              item[:tomorrow] = nil
+              item[:tomorrow_edit] = nil
               item[:note] = nil
               item[:indicater_check_edit] = nil
             elsif item[:indicater_reply_edit] == "承認"
@@ -343,7 +346,7 @@ class AttendancesController < ApplicationController
             elsif item[:indicater_reply_edit] == "否認"
               item[:started_edit_at] = nil
               item[:finished_edit_at] = nil
-              item[:tomorrow] = nil
+              item[:tomorrow_edit] = nil
               item[:note] = nil
               item[:indicater_check_edit] = nil
               e3 += 1
@@ -423,7 +426,7 @@ class AttendancesController < ApplicationController
 
   private #11.3.2add
 
-  # 1ヶ月分の勤怠情報を扱います。A０３,A06カラム 追加
+  # 1ヶ月分の勤怠情報を扱います。A03,A06カラム 追加
   def attendances_params
     params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :started_edit_at, :finished_edit_at, :tomorrow_edit, :indicater_check_edit, :indicater_reply_edit, :task_memo])[:attendances]
   end
@@ -434,6 +437,11 @@ class AttendancesController < ApplicationController
 
   def overwork_confirmation_form_params #A05 attendancesテーブルの（指示者確認、変更）
     params.require(:user).permit(attendances: [:task_memo, :overwork_status, :change, :indicater_check, :overtime, :indicater_check_anser])[:attendances]
+  end
+
+    #A09-1 勤怠編集のお知らせモーダル
+  def attendances_notice_params
+    params.require(:user).permit(attendances: [:started_at, :finished_at, :started_before_at, :finished_before_at, :started_edit_at, :finished_edit_at, :note, :indicater_reply_edit, :change_edit, :log_checked])[:attendances]
   end
 
   #A06 1ヶ月承認申請

@@ -138,7 +138,7 @@
           <!--旧退勤登録
           <td><%= format_hour(day.finished_at) if day.finished_at.present? %></td>
           <td><%= format_min(day.finished_at) if day.finished_at.present? %></td>
-          -->
+          --> <!--退社　-->
           <td><%= l(day.finished_at, format: :hour_only) if day.finished_at.present? %></td>
           <td><%= l(day.finished_at, format: :minutes_only) if day.finished_at.present? %></td>
           <td></td>
@@ -157,31 +157,51 @@
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
           </td>
-          <td><%= day.note %></td> <%#11.3.2add%>
-          <!-- A06更新 残業　関連 -->
+          <%#11.3.2add　備考%>
+          <td><%= day.note %></td> 
+          <!-- A06更新 残業　関連 終了予定時間-->
           <td><%= l(day.overtime, format: :hour_only) if day.overtime.present? %></td>
           <td><%= l(day.overtime, format: :minutes_only) if day.overtime.present? %></td>
-            <% if day.overtime.present? %>
-              <td><%= overtime_worked_on(day.overtime, @user.designated_work_end_time, day.overday_check) %></td>
-            <% else %>
-                <td></td>
-            <% end %>
-          <td><%= day.task_memo %></td>
-          <% if day.overwork_status == "承認" %>
-          <td><%= l(day.overtime, format: :hour_only) if day.overtime.present? %></td>
-          <td><%= l(day.overtime, format: :minutes_only) if day.overtime.present? %></td>
-
           <% if day.overtime.present? %>
-            <td><%= overtime_worked_on(day.overtime, @user.designated_work_end_time, day.tomorrow) %></td>
-          <% else %>
-          <td></td>
-          <% end %>
-          <td><%= day.task_memo %></td>
-
+            <td><%= overtime_worked_on(day.overtime, @user.designated_work_end_time, day.overday_check) %></td>
           <% else %>
             <td></td>
-            <%# <td></td> %>
           <% end %>
+          <td><%= day.task_memo %></td><!--業務処理内容-->
+<!--           　#終了予定時間　
+          <%# if day.overwork_status == "承認" %>
+            <td><%#= l(day.overtime, format: :hour_only) if day.overtime.present? %></td>
+            <td><%#= l(day.overtime, format: :minutes_only) if day.overtime.present? %></td>　-->
+            <!--時間外時間
+            <%# if day.overtime.present? %>  
+              <td><%#= overtime_worked_on(day.overtime, @user.designated_work_end_time, day.tomorrow_edit) %></td>
+            <%# else %>
+              <td></td>
+            <%# end %>
+            <td><%#= day.task_memo %></td>
+          <%# else %>
+            <%#<td></td> <td></td> %>
+          <%# end %> -->
+          <td>
+            <% if day.indicater_check_edit.present? %>
+              <%#= "#{day.indicater_check_edit}に勤怠変更#{day.indicater_reply_edit}" %>
+              <%= "勤怠変更#{day.indicater_reply_edit}" %><br>
+            <% elsif day.indicater_reply_edit == "承認" %>
+              <%= "勤怠変更申請が#{day.indicater_reply_edit}されました" %><br>
+            <% elsif day.indicater_reply_edit == "否認" %>
+              <%= "勤怠変更申請が#{day.indicater_reply_edit}されました" %><br>
+            <% end %>
+          <%#</td><td>%>
+            <% if day.overwork_sperior.present? %>
+              <%= "残業#{day.overwork_status}" %>
+              <%#= "#{day.overwork_sperior}に残業#{day.indicater_reply}" %>
+            <% elsif day.overwork_status == "承認" %>
+              <%= "残業申請が#{day.overwork_status}されました" %>
+            <% elsif day.overwork_status == "否認" %>
+              <%= "残業申請が#{day.overwork_status}されました" %>
+            <% end %>
+        　</td>
+        </tr>
             <%# <td></td><td></td> %>
         </tr> <%#10.5.2 td 1つ減らす%>
       <% end %>

@@ -1,4 +1,5 @@
 class WorkingPlacesController < ApplicationController 
+  before_action :admin_user, only: [:new, :create, :edit, :update, :index, :show, :destroy]
   def index
     @working_places = WorkingPlace.all.order(:working_place_number)#0505
   end

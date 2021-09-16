@@ -210,10 +210,10 @@ ja:
       hour_only: "%H時" #A06
       minutes_only: "%M分"  #A06
     pm: 午後
-  # enums: # enum型に対する日本語定義であることを明示
-  # attendance: # モデルを指定
-  #   indicater_reply:
-  #     not: なし
-  #     apporoval: 承認
-  #     denial: 否認
-  #     applying: 申請中
+  enums: # enum型に対する日本語定義であることを明示
+  attendance: # モデルを指定
+    overwork_status:
+      not: なし
+      apporoval: 承認
+      denial: 否認
+      applying: 申請中

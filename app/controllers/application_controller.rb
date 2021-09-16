@@ -26,23 +26,49 @@ class ApplicationController < ActionController::Base
       redirect_to login_url
     end
   end
-  
+
  # アクセスしたユーザーが現在ログインしているユーザーか確認します。
   def correct_user
     redirect_to(root_url) unless current_user?(@user)
   end
-	
+
+    # A07ログ専用のアクセスしたユーザーが現在ログインしているユーザーなのかを確認する
+  def correct_user_a
+    @user = User.find(params[:user_id])
+    unless current_user?(@user)
+      flash[:danger] = "他者のページは閲覧できません"
+      redirect_to root_url
+    end
+  end
+
   # システム管理権限所有かどうか判定します。
   def admin_user
     redirect_to root_url unless current_user.admin?
   end
 
-    # @userが定義されている上で使用する
+
+  #A09
+  def admin_not
+    if current_user.admin?
+    flash[:success] = "管理者は勤怠登録できません。"
+      redirect_to root_url
+    end
+  end
+
+  #A09-1
+  def correct_not
+    unless current_user == @user
+      flash[:danger] = "他者のページは閲覧できません。"
+      redirect_to root_url
+    end
+  end
+
+  # @userが定義されている上で使用する Tutorial
   def admin_or_correct
     unless current_user?(@user) || current_user.admin?
       flash[:danger] = "権限がありません。"
       redirect_to root_url
-    end  
+    end 
   end
 
 
@@ -69,14 +95,9 @@ class ApplicationController < ActionController::Base
   end
 end
 
-  # A07ログ専用のアクセスしたユーザーが現在ログインしているユーザーなのかを確認する
-  def correct_user_a
-    @user = User.find(params[:user_id])
-    unless current_user?(@user)
-      flash[:danger] = "他者のページは閲覧できません"
-      redirect_to root_url
-    end
-  end
+
+
+
     # unless one_month.count == @attendances.count
     #   ActiveRecord::Base.transaction do
     #     one_month.each { |day| @user.attendances.create!(worked_on: day) }

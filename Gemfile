@@ -30,10 +30,15 @@ gem 'rounding'#BNo10追加
 gem 'webpacker', '~> 4.0'
 gem 'redis', '~> 4.0'
 
+
 group :development, :test do
  #gem 'sqlite3', '1.3.13' #add_1.3.13番外編2
   gem 'sqlite3', '~> 1.4'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  #A09 Debug追加
+  gem 'pry-rails'
+  gem 'hirb'
+  gem 'hirb-unicode'
 end
 
 group :development do
@@ -50,7 +55,7 @@ end
 
 # Windows環境ではtzinfo-dataというgemを含める必要があります
 # Mac環境でもこのままでOKです
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+#gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # source 'https://rubygems.org'
 # git_source(:github) { |repo| "https://github.com/#{repo}.git" }

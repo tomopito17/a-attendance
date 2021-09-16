@@ -8,7 +8,7 @@ class AddOvertimeToAttendances < ActiveRecord::Migration[5.1]
     #add_column :attendances, :overwork_approver_id, :integer
     add_column :attendances, :overday_check, :boolean, default: false
     add_column :attendances, :overwork_sperior, :integer
-    add_column :attendances, :indicater_check, :string #A05add
+    add_column :attendances, :indicater_check, :string #A05add overwork_superior 上長A
     #A04
     add_column :attendances, :monthly_confirmation_approver_id, :integer
     add_column :attendances, :monthly_confirmation_status, :integer
@@ -20,7 +20,7 @@ class AddOvertimeToAttendances < ActiveRecord::Migration[5.1]
     add_column :attendances, :started_edit_at, :datetime
     add_column :attendances, :finished_before_at, :datetime
     add_column :attendances, :finished_edit_at, :datetime
-    # A06指示者確認
+    # A06指示者確認　overwork_status
     add_column :attendances, :indicater_reply, :integer
     #A06 どの上長に申請か
     add_column :attendances, :indicater_check_month, :string
@@ -46,8 +46,11 @@ class AddOvertimeToAttendances < ActiveRecord::Migration[5.1]
     # 変更前時間や編集用の出勤時間
     add_column :attendances, :change_edit, :boolean, default: false
     add_column :attendances, :indicater_check_edit_anser, :string
-
+      #A09 申請内容を承認したのか
+    add_column :attendances, :indicater_check_anser, :string
     #A07確認
     add_column :attendances, :verification, :boolean, default: false
+    #A09-1 勤怠修正ログ
+    add_column :attendances, :log_checked, :string
   end
 end
