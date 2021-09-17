@@ -183,18 +183,17 @@
             <%#<td></td> <td></td> %>
           <%# end %> -->
           <td>
-            <% if day.indicater_check_edit.present? %>
-              <%#= "#{day.indicater_check_edit}に勤怠変更#{day.indicater_reply_edit}" %>
-              <%= "勤怠変更#{day.indicater_reply_edit}" %><br>
+            <% if (day.indicater_check_edit.present?) && (day.indicater_reply_edit == "申請中") %>
+              <%= "#{day.indicater_check_edit}に勤怠変更#{day.indicater_reply_edit}" %>
+              <%#= "勤怠変更#{day.indicater_reply_edit}" %><br>
             <% elsif day.indicater_reply_edit == "承認" %>
               <%= "勤怠変更申請が#{day.indicater_reply_edit}されました" %><br>
             <% elsif day.indicater_reply_edit == "否認" %>
               <%= "勤怠変更申請が#{day.indicater_reply_edit}されました" %><br>
             <% end %>
           <%#</td><td>%>
-            <% if day.overwork_sperior.present? %>
-              <%= "残業#{day.overwork_status}" %>
-              <%#= "#{day.overwork_sperior}に残業#{day.indicater_reply}" %>
+            <% if (day.overwork_sperior.present?) && (day.overwork_status == "申請中")%>
+              <%= "#{User.find(day.overwork_sperior).name}に残業#{day.overwork_status}" %>
             <% elsif day.overwork_status == "承認" %>
               <%= "残業申請が#{day.overwork_status}されました" %>
             <% elsif day.overwork_status == "否認" %>

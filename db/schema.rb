@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(version: 20210613085111) do
     t.string "affiliation"
     t.integer "employee_number"
     t.integer "uid"
-    t.datetime "basic_work_time", default: "2021-09-15 23:00:00"
+    t.datetime "basic_work_time", default: "2021-09-17 23:00:00"
     t.time "designated_work_start_time", default: "2000-01-01 00:00:00"
     t.time "designated_work_end_time", default: "2000-01-01 09:00:00"
     t.boolean "superior"

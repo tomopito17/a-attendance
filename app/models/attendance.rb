@@ -30,7 +30,6 @@ class Attendance < ApplicationRecord
   #   end
   # end
 
-
   
   # 【所属長承認のお知らせ】一ヶ月支持者確認がログインユーザーで、ステータスが未承認かどうか＆何月分の勤怠
   def self.monthly_confirmation(current_user)
@@ -41,6 +40,35 @@ class Attendance < ApplicationRecord
     end
     year_month_arr.uniq.count
   end
+
+  validate :started_fnished_edit_at_blank
+
+  def started_fnished_edit_at_blank
+    errors.add(:started_edit_at, "必要項目が入力不足です") if (started_edit_at.blank? && finished_edit_at.blank?) && indicater_check_edit.present?
+  end
+
+  validate :overtime_overday_check__blank
+  def overtime_overday_check__blank
+    errors.add(:overtime, "必要項目が入力不足です") if(overtime.blank? && overday_check.blank?) && overwork_sperior.present?
+  end
+
+  validate :overtime_overday_check_only
+  def overtime_overday_check_only
+    errors.add(:overtime, "必要項目が入力不足です") if(overtime.present? || overday_check.present? || task_memo.present?) && overwork_sperior.blank?
+  end
+
+
+  # validate :finished_edit_at_blank
+  # validate :started_edit_at_blank
+
+  # def finished_edit_at_blank
+  #   errors.add(:started_edit_at, "が必要です") if started_edit_at.blank? && finished_edit_at.present?
+  # end
+
+  # def started_edit_at_blank
+  #   errors.add(:finished_edit_at, "が必要です") if started_edit_at.present? && finished_edit_at.blank?
+  # end
+
 
 
   #A03 【所属長承認のお知らせ】一ヶ月支持者確認がログインユーザーで、ステータスが未承認かどうか＆何月分の勤怠
